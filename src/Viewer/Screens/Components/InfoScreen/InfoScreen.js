@@ -1,7 +1,7 @@
 import React from 'react'
 // import Loader from '../../../../GlobalComponents/Loader/Loader'
 import { CircularProgress, makeStyles } from '@material-ui/core'
-import './InfoScreen.scss'
+// import './InfoScreen.scss'
 import { Grid } from '@material-ui/core'
 import Caption from '../Layout/Caption/Caption'
 
