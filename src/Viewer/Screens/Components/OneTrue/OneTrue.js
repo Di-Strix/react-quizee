@@ -24,7 +24,7 @@ function OneTrue({ caption, answerOptions, setFooterButtonState, footerActive })
         if (footerActive)
             setFooterButtonState(false)
         return () => { }
-    }, [])
+    }, [footerActive, setFooterButtonState])
 
     return (
         <Grid

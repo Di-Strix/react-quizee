@@ -1,5 +1,5 @@
 import { Grid, makeStyles } from '@material-ui/core'
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { setFooterButtonState } from 'redux/Viewer/actions'
 import AnswerHandlerContext from '../../../Context/AnswerHandlerContext'
@@ -14,20 +14,16 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const WriteAnswer = ({ caption, footerActive, setFooterButtonState }) => {
+const initialState = { value: '', error: '' }
+
+const WriteAnswer = ({ caption, setFooterButtonState, footerActive }) => {
     const answerHandler = React.useContext(AnswerHandlerContext)
     // const classPrefix = 'Quizee__Viewer__WriteAnswer'
-    const [state, setState] = useFooterObserver({ value: '', error: '' });
+    const [state, setState] = useFooterObserver(initialState);
     const classes = useStyles()
 
-    useEffect(() => {
-        if (!footerActive)
-            setFooterButtonState(true)
-        FooterObserver.subscribe(submitHandler)
-            return () => { FooterObserver.unSubscribe(submitHandler)}
-    }, [])
-
-    function processInputErrors(val) {
+    const processInputErrors = useCallback((val) => {
+        // debugger
         if (!val.trim()) {
             if (footerActive) setFooterButtonState(false)
             return 'Answer should contain at least one character'
@@ -35,23 +31,37 @@ const WriteAnswer = ({ caption, footerActive, setFooterButtonState }) => {
             if (!footerActive) setFooterButtonState(true)
             return ''
         }
-    }
+    }, [setFooterButtonState, footerActive])
 
     function changeHandler(event) {
+        // debugger
         const val = event.target.value
         setState({ value: val.trimStart(), error: processInputErrors(val) })
     }
-    function submitHandler(event, data) {
+
+    const submitHandler = useCallback((event, data) => {
+        // debugger
+        if (!data) data = initialState
         event.preventDefault()
         const error = processInputErrors(data.value)
-        if(error) return setState({...data, error})
+        if (error) return setState({ ...data, error })
         answerHandler(data.value)
-    }
+    }, [answerHandler, processInputErrors, setState])
+
+    useEffect(() => {
+        setFooterButtonState(false)
+    }, [setFooterButtonState])
+
+    useEffect(() => {
+        FooterObserver.subscribe(submitHandler)
+        return () => { FooterObserver.unSubscribe(submitHandler) }
+    }, [])
+
 
     return (
         <Grid container className={classes.root} direction='column'>
             <Caption>{caption}</Caption>
-            <AnswerField changeHandler={changeHandler} value={state.value} submitHandler={(e) => FooterObserver.emit(e)} error={state.error}/>
+            <AnswerField changeHandler={changeHandler} value={state.value} submitHandler={(e) => FooterObserver.emit(e)} error={state.error} />
             {/* <form
                     className='input-field'
                     onSubmit={submitHandler}
@@ -72,7 +82,7 @@ const WriteAnswer = ({ caption, footerActive, setFooterButtonState }) => {
 }
 
 const mapStateToProps = state => ({
-    footerActive: state.Viewer.footerButtonActive
+    footerActive: state.Viewer.Footer.active
 })
 
 const mapDispatchToProps = {

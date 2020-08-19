@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, Button, Grid, Container, Zoom, Box } from '@material-ui/core'
+import { makeStyles, Button, Grid, Container, Zoom } from '@material-ui/core'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import { screenChangeTransitionTime } from 'Viewer/constants'
 

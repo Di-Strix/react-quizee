@@ -66,7 +66,7 @@ const Viewer = ({ quizeeId, state, addAnswer, throwError, showResults, loadResul
             })
             .catch(err => {
                 throwError(err.message)
-                console.error(err)
+                // console.error(err)
             })
     }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import AnswerHandlerContext from '../../../Context/AnswerHandlerContext'
 // import './SeveralTrue.scss'
 import { Grid, makeStyles } from '@material-ui/core'
@@ -20,14 +20,6 @@ const SeveralTrue = ({ caption, answerOptions, requiredAnswerCount = 1, footerAc
     const [selected, setSelected] = useFooterObserver(Array(answerOptions.length).fill(false))
     const classes = useStyles()
 
-    useEffect(() => {
-        if (footerActive) setFooterButtonState(false)
-        FooterObserver.subscribe(submitHandler)
-        return () => FooterObserver.unSubscribe(submitHandler)
-    }, [])
-
-    useEffect(() => console.log(selected), [selected])
-
     function processAnswerCount(arr = []) {
         const checked = arr.reduce((acc, val) => acc + val, 0)
         if (checked >= requiredAnswerCount) {
@@ -42,12 +34,22 @@ const SeveralTrue = ({ caption, answerOptions, requiredAnswerCount = 1, footerAc
         processAnswerCount(sel)
     }
 
-    function submitHandler(event, data) {
+    const submitHandler = useCallback((_, data) => {
         if (data.length <= requiredAnswerCount) return
         const answer = []
         data.forEach((selected, index) => selected ? answer.push(answerOptions[index]) : null)
         answerHandler(answer)
-    }
+    }, [answerHandler, requiredAnswerCount, answerOptions])
+
+
+    useEffect(() => {
+        setFooterButtonState(false)
+    }, [setFooterButtonState])
+
+    useEffect(() => {
+        FooterObserver.subscribe(submitHandler)
+        return () => FooterObserver.unSubscribe(submitHandler)
+    }, [])
 
     return (
         <Grid container className={classes.root}>
