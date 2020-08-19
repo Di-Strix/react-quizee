@@ -46,7 +46,6 @@ const SeveralTrue = ({ caption, answerOptions, requiredAnswerCount = 1, footerAc
         if (data.length <= requiredAnswerCount) return
         const answer = []
         data.forEach((selected, index) => selected ? answer.push(answerOptions[index]) : null)
-        debugger
         answerHandler(answer)
     }
 

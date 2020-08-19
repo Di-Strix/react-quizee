@@ -8,11 +8,6 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
         justifyContent: 'flex-end',
         marginBottom: theme.spacing(1),
-        minHeight: 0,
-        overflowX: 'auto'        
-    },
-    scrollableContainer: {
-        overflowY: 'auto',
     },
     buttonsHolder: {
         margin: theme.spacing(2),
@@ -53,7 +48,7 @@ const ButtonGrid = ({
                 onChange: () => handler(text, index),
                 selected: selected[index] || false,
                 value: index,
-                size: 'large',
+                // size: 'large',
                 ...props,
             }
         }
@@ -71,7 +66,7 @@ const ButtonGrid = ({
             className={classes.buttonsGridContainer}
             direction='column'
         >
-            <Container maxWidth='lg' className={classes.scrollableContainer}>
+            <Container maxWidth='lg'>
                 <Grid
                     container
                     justify='center'
