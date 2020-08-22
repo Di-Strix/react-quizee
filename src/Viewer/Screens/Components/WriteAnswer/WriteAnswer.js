@@ -55,6 +55,7 @@ const WriteAnswer = ({ caption, setFooterButtonState, footerActive }) => {
     useEffect(() => {
         FooterObserver.subscribe(submitHandler)
         return () => { FooterObserver.unSubscribe(submitHandler) }
+        // eslint-disable-next-line
     }, [])
 
 

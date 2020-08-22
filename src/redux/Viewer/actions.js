@@ -3,18 +3,27 @@ import {
     ERROR,
     SHOW_RESULTS,
     LOAD_RESULTS,
-    SHOW_QUESTIONS,
-    SHOW_CAPTION,
     SAVE_QUESTIONS,
     LOAD_QUESTIONS,
-    FOOTER_DISABLE_NEXT_BUTTON,
-    FOOTER_ENABLE_NEXT_BUTTON,
+    SET_QUIZEE_ID,
+    UPDATE_TRANSITION_KEY,
+    SET_SCREEN,
+    SET_TEXT,
+    SET_LOADING,
+    FOOTER_SET_NEXT_BUTTON_STATE
 } from './types'
+import { CAPTION, QUEST } from './screens'
 
 export const addAnswer = (answer) => {
     return {
         type: ADD_ANSWER,
         payload: answer
+    }
+}
+export const setQuizeeID = (ID) => {
+    return {
+        type: SET_QUIZEE_ID,
+        payload: ID
     }
 }
 export const throwError = (message) => {
@@ -31,37 +40,55 @@ export const showResults = (message) => {
 }
 export const loadResults = () => {
     return {
-        type: LOAD_RESULTS,
+        type: LOAD_RESULTS
     }
 }
-export const showQuestions = () => {
+export const showQuestionsScreen = () => {
     return {
-        type: SHOW_QUESTIONS,
+        type: SET_SCREEN,
+        payload: QUEST
     }
 }
-export const showCaption = () => {
+export const showCaptionScreen = () => {
     return {
-        type: SHOW_CAPTION,
+        type: SET_SCREEN,
+        payload: CAPTION
     }
 }
-export const saveQuestions = (caption, questions) => {
+export const setText = text => {
+    return {
+        type: SET_TEXT,
+        payload: text || ''
+    }
+}
+export const setLoading = state => {
+    return {
+        type: SET_LOADING,
+        payload: state
+    }
+}
+export const saveQuestions = (questions) => {
     return {
         type: SAVE_QUESTIONS,
         payload: {
-            questions: questions || [],
-            caption: caption || {}
+            questions: questions || []
         }
     }
 }
-export const loadQuestions = (quizeeId) => {
+export const loadQuestions = () => {
     return {
-        type: LOAD_QUESTIONS,
-        payload: quizeeId || ''
+        type: LOAD_QUESTIONS
     }
 }
 
 export const setFooterButtonState = state => {
-    if (state)
-        return { type: FOOTER_ENABLE_NEXT_BUTTON }
-    return { type: FOOTER_DISABLE_NEXT_BUTTON }
+    return {
+        type: FOOTER_SET_NEXT_BUTTON_STATE,
+        payload: state
+    }
+}
+export const updateTransitionKey = () => {
+    return {
+        type: UPDATE_TRANSITION_KEY
+    }
 }

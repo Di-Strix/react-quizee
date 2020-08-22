@@ -49,6 +49,7 @@ const SeveralTrue = ({ caption, answerOptions, requiredAnswerCount = 1, footerAc
     useEffect(() => {
         FooterObserver.subscribe(submitHandler)
         return () => FooterObserver.unSubscribe(submitHandler)
+        // eslint-disable-next-line
     }, [])
 
     return (

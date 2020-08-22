@@ -3,101 +3,119 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import './Viewer.scss'
-import MainScreen from './Screens/MainScreen';
+import MainScreen from './Screens/MainScreen'
 import AnswerHandlerContext from './Context/AnswerHandlerContext'
-import InfoScreen from './Screens/Components/InfoScreen/InfoScreen';
-import * as SCREENS from './screens'
+import InfoScreen from './Screens/Components/InfoScreen/InfoScreen'
+import * as SCREENS from 'redux/Viewer/screens'
 import {
     addAnswer,
     throwError,
     showResults,
     loadResults,
-    showQuestions,
-    showCaption,
+    showQuestionsScreen,
+    showCaptionScreen,
     saveQuestions,
-    loadQuestions
+    loadQuestions,
+    updateTransitionKey,
+    setLoading,
+    setText,
+    setFooterButtonState
 } from '../redux/Viewer/actions'
 import Footer from './Screens/Components/Footer/Footer'
 import { Grid, makeStyles, Toolbar } from '@material-ui/core'
 import { screenChangeTransitionTime as transitionTime, captionShowTime } from 'Viewer/constants'
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
     screen: {
         flexGrow: 1
     },
     grow: {
-        flexGrow: 1,
+        flexGrow: 1
     },
     temp: {
         height: '100%'
     },
-    offset: theme.mixins.toolbar,
+    offset: theme.mixins.toolbar
 }))
 
-const Viewer = ({ quizeeId, state, addAnswer, throwError, showResults, loadResults, showQuestions, showCaption, saveQuestions, loadQuestions }) => {
+const Viewer = (props) => {
     const classes = useStyles()
+    const history = useHistory()
 
     useEffect(() => {
-        if (!quizeeId) return
-        loadQuestions(quizeeId)
+        if (!props.state.quizeeId) return history.push('/')
+        const startTime = new Date().getTime()
+        props.showCaptionScreen()
+        const loaderId = setTimeout(() => {
+            props.setLoading(true)
+        }, 1000)
 
-        axios.get(process.env.REACT_APP_QUIZEE_DB_URL + `quizees/${quizeeId}/content.json`)
+        axios.get(process.env.REACT_APP_QUIZEE_DB_URL + `quizees/${props.state.quizeeId}/content.json`)
             .then(res => {
                 console.log(res)
-                saveQuestions(res.data.caption, res.data.questions)
-                showCaption()
-                setTimeout(() => showQuestions(), captionShowTime)
+                props.saveQuestions(res.data.questions)
+                const elapsed = new Date().getTime() - startTime
+                setTimeout(() => {
+                    props.updateTransitionKey()
+                    props.showQuestionsScreen()
+                }, elapsed >= captionShowTime ? 0 : captionShowTime - elapsed)
             })
             .catch(err => {
                 console.error(err)
-                throwError(err.message)
+                props.throwError(err.message)
             })
-    }, [quizeeId, loadQuestions, saveQuestions, showCaption, showQuestions, throwError])
+            .finally(() => {
+                clearTimeout(loaderId)
+            })
+    }, [props.state.quizeeId, props.loadQuestions, props.saveQuestions, props.showCaptionScreen, props.showQuestionsScreen, props.throwError, history])
 
     function checkAnswers(lastAnswer) {
-        loadResults()
+        props.updateTransitionKey()
+        props.showCaptionScreen()
+        props.setText('Please wait, we are processing your answers🎉')
+        props.setLoading(true)
+        props.setFooterButtonState(false)
 
-        axios.get('http://localhost:5001/react-quizee-4fa1c/us-central1/checkAnswers?data='
-            + JSON.stringify({ quizeeId: state.quizeeId, answers: [...state.answers, lastAnswer] }))
+        axios.get(process.env.REACT_APP_QUIZEE_API_URL + 'checkAnswers?data='
+            + JSON.stringify({quizeeId: props.state.quizeeId, answers: [...props.state.answers, lastAnswer]}))
             .then(res => {
                 setTimeout(() => {
-                    showResults(res.data.message)
+                    props.updateTransitionKey()
+                    props.setLoading(false)
+                    props.setText(`Woohoo! You've ${res.data.message}% correct answers!`)
                 }, transitionTime)
             })
             .catch(err => {
-                throwError(err.message)
-                // console.error(err)
+                props.throwError(err.message)
             })
     }
 
     function pushAnswer(answer) {
         console.log('Answer received:', answer)
-        addAnswer(answer)
-        if (state.answers.length + 1 === state.questions.length) {
+        props.addAnswer(answer)
+        props.updateTransitionKey()
+        if (props.state.answers.length + 1 === props.state.questions.length) {
             checkAnswers(answer)
         }
+
     }
 
     let screen = <></>
 
-    switch (state.screen) {
-        case SCREENS.LOADER:
-            screen = <InfoScreen loading={true}>{state.text}</InfoScreen>
-            break
+    switch (props.state.screen) {
         case SCREENS.CAPTION:
-            screen = <InfoScreen>{state.caption}</InfoScreen>
+            screen = <InfoScreen loading={props.state.loading}>{props.state.text}</InfoScreen>
             break
         case SCREENS.QUEST:
-            const question = state.questions[state.answers.length]
-            screen = <MainScreen question={question} />
+            const question = props.state.questions[props.state.answers.length]
+            screen = <MainScreen question={question}/>
             break
         case SCREENS.ERROR:
-            screen = <InfoScreen>{state.text}</InfoScreen>
-            break
-        case SCREENS.END_TITLE:
-            screen = <InfoScreen>{state.text}</InfoScreen>
+            screen = <InfoScreen>{props.state.text}</InfoScreen>
             break
         default:
+            console.log('No screen found as requested:', props.state.screen)
             break
     }
 
@@ -108,7 +126,7 @@ const Viewer = ({ quizeeId, state, addAnswer, throwError, showResults, loadResul
             <div className='Viewer'>
                 <TransitionGroup className='transition'>
                     <CSSTransition
-                        key={state.transitionKey}
+                        key={props.state.transitionKey}
                         timeout={transitionTime}
                         classNames='screen-change'
                         mountOnEnter
@@ -118,15 +136,15 @@ const Viewer = ({ quizeeId, state, addAnswer, throwError, showResults, loadResul
                             <Grid item className={classes.grow}>
                                 {screen}
                             </Grid>
-                            <Grid item className={'fakeFooter'}>
-                                <Toolbar />
+                            <Grid item className='fakeFooter'>
+                                <Toolbar/>
                             </Grid>
                         </Grid>
                     </CSSTransition>
                 </TransitionGroup>
-                <Footer />
+                <Footer/>
             </div>
-        </AnswerHandlerContext.Provider >
+        </AnswerHandlerContext.Provider>
     )
 }
 
@@ -139,10 +157,14 @@ const mapDispatchToProps = {
     addAnswer,
     throwError,
     showResults,
-    showQuestions,
-    showCaption,
+    showQuestionsScreen,
+    showCaptionScreen,
     saveQuestions,
     loadQuestions,
-    loadResults
+    loadResults,
+    updateTransitionKey,
+    setText,
+    setLoading,
+    setFooterButtonState
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Viewer)

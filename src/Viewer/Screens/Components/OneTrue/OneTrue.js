@@ -39,7 +39,7 @@ function OneTrue({ caption, answerOptions, setFooterButtonState, footerActive })
 }
 
 const mapStateToProps = state => ({
-    footerActive: state.Viewer.footerButtonActive
+    footerActive: state.Viewer.Footer.active
 })
 
 const mapDispatchToProps = {

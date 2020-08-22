@@ -9,28 +9,52 @@ const initialState = {
     answers: [],
     text: '',
     finished: false,
-    screen: '',
+    screen: SCREENS.CAPTION,
     transitionKey: '0',
     Footer: {
-        active: false,
+        active: false
     },
-    currentScreen: {},
+    currentScreen: ''
 }
 
 
 const handlers = {
-    [TYPES.LOAD_QUESTIONS]: (state, { payload }) => ({ ...state, screen: SCREENS.LOADER, text: 'Loading Quizee...', quizeeId: payload, transitionKey: state.questions.length > 0 ? getKey() : '0' }),
-    [TYPES.SAVE_QUESTIONS]: (state, { payload }) => ({ ...state, questions: payload.questions, caption: payload.caption }),
-    [TYPES.SHOW_CAPTION]:   (state)              => ({ ...state, screen: SCREENS.CAPTION, transitionKey: getKey() }),
-    [TYPES.SHOW_QUESTIONS]: (state)              => ({ ...state, screen: SCREENS.QUEST, transitionKey: getKey() }),
-    [TYPES.LOAD_RESULTS]:   (state)              => ({ ...state, screen: SCREENS.LOADER, text: 'Please wait, we are processing your answers🎉', transitionKey: getKey(), finished: true, Footer: {active: false} }),
-    [TYPES.SHOW_RESULTS]:   (state, { payload }) => ({ ...state, screen: SCREENS.END_TITLE, text: `Woohoo! You've ${payload}% correct answers!`, transitionKey: getKey() }),
-    [TYPES.ADD_ANSWER]:     (state, { payload }) => ({ ...state, answers: [...state.answers, payload], transitionKey: getKey(), currentScreen: {} }),
-    [TYPES.SET_QUIZEE_ID]:  (state, { payload }) => ({ ...state, quizeeId: payload }),
-    [TYPES.ERROR]:          (state, { payload }) => ({ ...state, screen: SCREENS.ERROR, text: payload, transitionKey: getKey() }),
-
-    [TYPES.FOOTER_DISABLE_NEXT_BUTTON]: (state)              => ({ ...state, Footer: {active: false} }),
-    [TYPES.FOOTER_ENABLE_NEXT_BUTTON]:  (state)              => ({ ...state, Footer: {active: true } }),
+    [TYPES.SET_SCREEN]: (state, {payload}) => ({
+        ...state,
+        screen: payload || SCREENS.CAPTION,
+        loading: false
+    }),
+    [TYPES.SET_LOADING]: (state, {payload}) => ({...state, loading: payload}),
+    [TYPES.SET_TEXT]: (state, {payload}) => ({...state, text: payload}),
+    [TYPES.SAVE_QUESTIONS]:
+        (state, {payload}) => ({...state, questions: payload.questions, caption: payload.caption}),
+    [TYPES.LOAD_RESULTS]:
+        (state) => ({
+            ...state,
+            screen: SCREENS.LOADER,
+            text: 'Please wait, we are processing your answers🎉',
+            finished: true,
+            Footer: {active: false}
+        }),
+    [TYPES.SHOW_RESULTS]:
+        (state, {payload}) => ({
+            ...state,
+            screen: SCREENS.END_TITLE,
+            text: `Woohoo! You've ${payload}% correct answers!`
+        }),
+    [TYPES.ADD_ANSWER]:
+        (state, {payload}) => ({
+            ...state,
+            answers: [...state.answers, payload]
+        }),
+    [TYPES.SET_QUIZEE_ID]:
+        (_, {payload}) => ({...initialState, quizeeId: payload}),
+    [TYPES.ERROR]:
+        (state, {payload}) => ({...state, screen: SCREENS.ERROR, text: payload}),
+    [TYPES.FOOTER_SET_NEXT_BUTTON_STATE]:
+        (state, {payload}) => ({...state, Footer: {active: payload}}),
+    [TYPES.UPDATE_TRANSITION_KEY]:
+        (state) => ({...state, transitionKey: getKey()}),
     DEFAULT: state => state
 }
 
