@@ -68,6 +68,7 @@ const Viewer = (props) => {
             .finally(() => {
                 clearTimeout(loaderId)
             })
+        // eslint-disable-next-line
     }, [props.state.quizeeId, props.loadQuestions, props.saveQuestions, props.showCaptionScreen, props.showQuestionsScreen, props.throwError, history])
 
     function checkAnswers(lastAnswer) {

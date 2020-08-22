@@ -84,7 +84,7 @@ const HomeScreen = ({state, fetchQuizees, showQuizees, setQuizeeID, setViewerTex
         setQuizeeID(id)
         setViewerText(caption)
         history.push('/Viewer')
-    }, [history, setQuizeeID])
+    }, [history, setQuizeeID, setViewerText])
 
     return (
         <Box maxWidth='lg' className={classes.root}>
