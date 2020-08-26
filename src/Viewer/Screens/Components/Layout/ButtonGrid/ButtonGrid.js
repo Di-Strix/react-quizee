@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { makeStyles, Button, Grid, Container, Zoom } from '@material-ui/core'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import { screenChangeTransitionTime } from 'Viewer/constants'
+import IsConstructorMode from 'Viewer/Context/IsConstructorModeContext'
 
 const useStyles = makeStyles(theme => ({
     buttonsGridContainer: {
@@ -30,6 +31,10 @@ const ButtonGrid = ({
     buttonTransitionDelay = 100,
     selected = []
 }) => {
+
+    let ButtonAnim = Zoom
+
+    if(useContext(IsConstructorMode)) ButtonAnim = ({children}) => children
 
     const classes = useStyles()
     const defaultProps = {
@@ -71,24 +76,24 @@ const ButtonGrid = ({
                     container
                     justify='center'
                 >
-                    {answerOptions.map((text, index) =>
+                    {answerOptions.map((answerOption, index) =>
                         <Grid
                             item
-                            key={index}
+                            key={answerOption.id}
                             xs={12}
                             sm={3}
                             className={classes.buttonsHolder}
                         >
-                            <Zoom in={true} style={{ transitionDelay: inTransitionDelay + index * buttonTransitionDelay }}>
+                            <ButtonAnim in={true} style={{ transitionDelay: inTransitionDelay + index * buttonTransitionDelay }}>
                                 <div>
                                     <ButtonNode
                                         {...defaultProps}
-                                        {...additionalProps(text, index)}
+                                        {...additionalProps(answerOption.val, answerOption.id)}
                                     >
-                                        {text}
+                                        {answerOption.val}
                                     </ButtonNode>
                                 </div>
-                            </Zoom>
+                            </ButtonAnim>
                         </Grid>
                     )}
                 </Grid>

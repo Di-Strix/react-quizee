@@ -7,10 +7,6 @@
   box-sizing: border-box;
 }
 
-// button {
-//   @include defaultButton();
-// }
-
 body {
   margin: 0;
   font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -31,3 +27,4 @@ code {
 main {
   flex: 1 0 auto;
 }
+

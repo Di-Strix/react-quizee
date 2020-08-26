@@ -4,7 +4,7 @@ import * as SCREENS from './screens'
 const getKey = () => new Date().getTime().toString()
 
 const initialState = {
-    quizeeId: null,
+    quizeeId: '',
     questions: [],
     answers: [],
     text: '',

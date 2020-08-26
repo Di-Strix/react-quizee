@@ -10,6 +10,7 @@ import * as serviceWorker from './serviceWorker'
 import HomeScreen from 'Home/Home'
 import Viewer from 'Viewer/Viewer'
 import {SnackbarProvider} from 'notistack'
+import Creator from './Creator/Creator'
 
 const store = createStore(rootReducer, compose(
     process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__() : null

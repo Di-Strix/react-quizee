@@ -1,0 +1,2 @@
+export const ANSWER_OPTIONS = 'ANSWER_OPTIONS'
+export const ANSWER_INPUT = 'ANSWER_INPUT'

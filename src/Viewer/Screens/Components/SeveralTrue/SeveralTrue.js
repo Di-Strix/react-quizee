@@ -11,24 +11,24 @@ import useFooterObserver from 'Viewer/FooterObserver/useFooterObserver'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        height: '100%'
+        height: '100%',
     },
 }))
 
-const SeveralTrue = ({ caption, answerOptions, requiredAnswerCount = 1, footerActive, setFooterButtonState }) => {
+const SeveralTrue = ({caption, answerOptions, requiredAnswerCount = 1, footerActive, setFooterButtonState}) => {
     const answerHandler = React.useContext(AnswerHandlerContext)
-    const [selected, setSelected] = useFooterObserver(Array(answerOptions.length).fill(false))
+    const [selected, setSelected] = useFooterObserver({})
     const classes = useStyles()
 
-    function processAnswerCount(arr = []) {
-        const checked = arr.reduce((acc, val) => acc + val, 0)
+    function processAnswerCount(obj = {}) {
+        const checked = Object.keys(obj).reduce((acc, val) => acc + val, 0)
         if (checked >= requiredAnswerCount) {
             if (!footerActive) setFooterButtonState(true)
         } else if (footerActive) setFooterButtonState(false)
     }
 
     function clickHandler(_, index) {
-        const sel = [...selected]
+        const sel = {...selected}
         sel[index] = !sel[index]
         setSelected(sel)
         processAnswerCount(sel)
@@ -53,9 +53,14 @@ const SeveralTrue = ({ caption, answerOptions, requiredAnswerCount = 1, footerAc
     }, [])
 
     return (
-        <Grid container className={classes.root}>
+        <Grid
+            container
+            className={classes.root}
+            direction='column'
+        >
             <Caption>{caption}</Caption>
-            <ButtonGrid toggle answerOptions={answerOptions} checked={selected} handler={clickHandler} selected={selected} />
+            <ButtonGrid toggle answerOptions={answerOptions} checked={selected} handler={clickHandler}
+                        selected={selected}/>
         </Grid>
         //     <h1 className={classPrefix + '__question'}>{caption}</h1>
         //     <div className={classPrefix + '__buttons'}>
@@ -78,11 +83,11 @@ const SeveralTrue = ({ caption, answerOptions, requiredAnswerCount = 1, footerAc
 }
 
 const mapStateToProps = state => ({
-    footerActive: state.Viewer.Footer.active
+    footerActive: state.Viewer.Footer.active,
 })
 
 const mapDispatchToProps = {
-    setFooterButtonState
+    setFooterButtonState,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SeveralTrue)

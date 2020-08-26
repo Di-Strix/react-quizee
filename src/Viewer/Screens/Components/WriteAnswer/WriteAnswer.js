@@ -10,16 +10,16 @@ import useFooterObserver from 'Viewer/FooterObserver/useFooterObserver'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        height: '100%'
-    }
+        height: '100%',
+    },
 }))
 
-const initialState = { value: '', error: '' }
+const initialState = {value: '', error: ''}
 
-const WriteAnswer = ({ caption, setFooterButtonState, footerActive }) => {
+const WriteAnswer = ({caption, setFooterButtonState, footerActive}) => {
     const answerHandler = React.useContext(AnswerHandlerContext)
     // const classPrefix = 'Quizee__Viewer__WriteAnswer'
-    const [state, setState] = useFooterObserver(initialState);
+    const [state, setState] = useFooterObserver(initialState)
     const classes = useStyles()
 
     const processInputErrors = useCallback((val) => {
@@ -36,7 +36,7 @@ const WriteAnswer = ({ caption, setFooterButtonState, footerActive }) => {
     function changeHandler(event) {
         // debugger
         const val = event.target.value
-        setState({ value: val.trimStart(), error: processInputErrors(val) })
+        setState({value: val.trimStart(), error: processInputErrors(val)})
     }
 
     const submitHandler = useCallback((event, data) => {
@@ -44,7 +44,7 @@ const WriteAnswer = ({ caption, setFooterButtonState, footerActive }) => {
         if (!data) data = initialState
         event.preventDefault()
         const error = processInputErrors(data.value)
-        if (error) return setState({ ...data, error })
+        if (error) return setState({...data, error})
         answerHandler(data.value)
     }, [answerHandler, processInputErrors, setState])
 
@@ -62,7 +62,8 @@ const WriteAnswer = ({ caption, setFooterButtonState, footerActive }) => {
     return (
         <Grid container className={classes.root} direction='column'>
             <Caption>{caption}</Caption>
-            <AnswerField changeHandler={changeHandler} value={state.value} submitHandler={(e) => FooterObserver.emit(e)} error={state.error} />
+            <AnswerField changeHandler={changeHandler} value={state.value} submitHandler={(e) => FooterObserver.emit(e)}
+                         error={state.error}/>
             {/* <form
                     className='input-field'
                     onSubmit={submitHandler}
@@ -83,7 +84,7 @@ const WriteAnswer = ({ caption, setFooterButtonState, footerActive }) => {
 }
 
 const mapStateToProps = state => ({
-    footerActive: state.Viewer.Footer.active
+    footerActive: state.Viewer.Footer.active,
 })
 
 const mapDispatchToProps = {

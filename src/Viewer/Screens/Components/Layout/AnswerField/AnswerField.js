@@ -22,13 +22,14 @@ const AnswerField = ({ error = '', changeHandler = () => { }, submitHandler = ()
                         error={error ? true : false}
                         helperText={error || 'ok'}
                         label='Write your answer here'
-                        InputProps={{ style: { padding: '.6rem' } }}
+                        // InputProps={{ style: { padding: '.6rem' } }}
                         onChange={changeHandler}
                         value={value}
                         className={classes.input}
                         variant='filled'
                         autoFocus
                         ref={fieldRef}
+                        size='medium'
                     />
                 </form>
             </Container>
