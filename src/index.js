@@ -35,6 +35,9 @@ ReactDOM.render(
                             <Route path='/Viewer'>
                                 <Viewer/>
                             </Route>
+                            <Route path='/Creator'>
+                                <Creator />
+                            </Route>
                         </Switch>
                     </BrowserRouter>
                 </SnackbarProvider>

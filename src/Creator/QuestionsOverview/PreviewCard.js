@@ -1,9 +1,9 @@
-import React from 'react'
-import { createMuiTheme, Grid, Paper } from '@material-ui/core'
-import Image from 'material-ui-image'
+import React, { useState } from 'react'
+import { createMuiTheme, Grid, Paper, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { setSelected } from 'redux/Creator/actions'
 import { connect } from 'react-redux'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 const useStyles = makeStyles(theme => ({
     selected: {
@@ -14,15 +14,24 @@ const useStyles = makeStyles(theme => ({
         height: '100%',
         width: '100%',
     },
+    removeButton: {
+        position: 'absolute',
+        bottom: theme.spacing(1.5),
+        right: theme.spacing(1.5),
+        transition: 'color .15s',
+    },
+    disabledColor: {
+        color: theme.palette.action.disabled,
+    },
 }))
 
-function PreviewCard({index, style, setSelected = () => {}, state}) {
+function PreviewCard({index, style, setSelected = () => {}, onRemove = () => {}, state}) {
     const classes = useStyles()
     const theme = createMuiTheme()
-    const aspectRatio = 16 / 9
+    const [buttonHover, setButtonHover] = useState(false)
 
     const rootStyles = {...style, height: style.height + theme.spacing(1)} // increasing div's height to make gutter bottom
-    if (index > 0) rootStyles.top = style.top + theme.spacing(index) // calculating position height of card with spacing
+    rootStyles.top = style.top + theme.spacing(index + 1) // calculating position height of card with spacing
 
     return (
         <div style={rootStyles}>
@@ -31,14 +40,26 @@ function PreviewCard({index, style, setSelected = () => {}, state}) {
                     height: style.height,
                     width: `calc(${style.width} - ${theme.spacing(2)}px)`,
                     margin: '0 auto',
+                    zIndex: 0,
                 }}
-                onClick={() => setSelected(index)}
             >
+                <IconButton
+                    className={[classes.removeButton, buttonHover ? '' : classes.disabledColor].join(' ')}
+                    disableRipple
+                    size={'small'}
+                    onPointerEnter={() => setButtonHover(true)}
+                    onPointerLeave={() => setButtonHover(false)}
+                    color={buttonHover ? 'secondary' : ''}
+                    onClick={() => onRemove(index)}
+                >
+                    <DeleteIcon/>
+                </IconButton>
                 <Grid
                     container
                     className={[classes.takeAllSpace, state.selected === index ? classes.selected : ''].join(' ')}
                     direction='column'
                     justify='center'
+                    onClick={() => setSelected(index)}
                 >
                 </Grid>
             </Paper>

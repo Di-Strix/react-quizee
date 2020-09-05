@@ -15,25 +15,30 @@ const questionInitialState = {
     answerOptions: [{id: new Date().getTime(), val: 'Answer'}],
 }
 
+const answerInitialState = {
+    answer: null,
+    config: {},
+}
+
 const handlers = {
     [TYPES.CREATE_QUESTION]: (state) => ({
         ...state,
         questions: [...state.questions, JSON.parse(JSON.stringify(questionInitialState))],
         selected: state.questions.length,
+        answers: [...state.answers, JSON.parse(JSON.stringify(answerInitialState))],
     }),
+    [TYPES.UPDATE_QUESTIONS_LIST]: (state, {payload}) => ({...state, questions: [...payload]}),
     [TYPES.SET_SELECTED]: (state, {payload}) => ({...state, selected: payload}),
     [TYPES.UPDATE_QUESTION]: (state, {payload}) => {
         const questions = [...state.questions]
-        questions[state.selected] = {
-            ...questions[state.selected],
-            ...payload
-        }
+        questions[state.selected] = payload
         return {
             ...state,
             questions,
         }
     },
     [TYPES.UPDATE_ANSWERS]: (state, {payload}) => ({...state, answers: payload}),
+    [TYPES.UPDATE_QUIZEE_CAPTION]: (state, {payload}) => ({...state, caption: payload}),
     DEFAULT: state => state,
 }
 

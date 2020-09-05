@@ -27,19 +27,20 @@ const SeveralTrue = ({caption, answerOptions, requiredAnswerCount = 1, footerAct
         } else if (footerActive) setFooterButtonState(false)
     }
 
-    function clickHandler(_, index) {
+    function clickHandler(id) {
         const sel = {...selected}
-        sel[index] = !sel[index]
+        sel[id] = !sel[id]
         setSelected(sel)
         processAnswerCount(sel)
     }
 
     const submitHandler = useCallback((_, data) => {
-        if (data.length <= requiredAnswerCount) return
-        const answer = []
-        data.forEach((selected, index) => selected ? answer.push(answerOptions[index]) : null)
-        answerHandler(answer)
-    }, [answerHandler, requiredAnswerCount, answerOptions])
+            if (data.length <= requiredAnswerCount) return
+            const answer = []
+            Object.keys(data).forEach(key => data[key] ? answer.push(+key) : null)
+            answerHandler(answer)
+        }, [answerHandler, requiredAnswerCount],
+    )
 
 
     useEffect(() => {

@@ -48,19 +48,19 @@ const ButtonGrid = ({
 
     if (toggle) {
         ButtonNode = ToggleButton
-        additionalProps = (text, index) => {
+        additionalProps = (id, text) => {
             return {
-                onChange: () => handler(text, index),
-                selected: selected[index] || false,
-                value: index,
+                onChange: () => handler(id, text),
+                selected: selected[id] || false,
+                value: id,
                 // size: 'large',
                 ...props,
             }
         }
     } else {
         ButtonNode = Button
-        additionalProps = (text, index) => ({
-            onClick: () => handler(text, index),
+        additionalProps = (id, text) => ({
+            onClick: () => handler(id, text),
             ...props,
         })
 
@@ -88,7 +88,7 @@ const ButtonGrid = ({
                                 <div>
                                     <ButtonNode
                                         {...defaultProps}
-                                        {...additionalProps(answerOption.val, answerOption.id)}
+                                        {...additionalProps(answerOption.id, answerOption.val)}
                                     >
                                         {answerOption.val}
                                     </ButtonNode>

@@ -12,8 +12,12 @@ import {
     AppBar,
     Toolbar,
     CardMedia,
-    Container
+    Container,
+    Fab,
+    useScrollTrigger,
+    Slide,
 } from '@material-ui/core'
+import EditIcon from '@material-ui/icons/Edit'
 import { connect } from 'react-redux'
 import { fetchQuizees, showQuizees } from 'redux/Home/actions'
 import { setQuizeeID, setText } from 'redux/Viewer/actions'
@@ -24,22 +28,32 @@ import { useSnackbar } from 'notistack'
 const useStyles = makeStyles(theme => ({
     root: {
         minHeight: '100vh',
-        minWidth: '100vw'
+        Width: '100vw',
     },
     content: {
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(2),
     },
     card: {
         width: 275,
-        maxHeight: 374
+        maxHeight: 374,
     },
     cardMargin: {
-        margin: theme.spacing(2)
+        margin: `0 ${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
     },
     media: {
         height: 0,
-        paddingTop: '56.25%' // 16:9
-    }
+        paddingTop: '56.25%', // 16:9
+    },
+    stickyFab: {
+        position: 'sticky',
+        alignSelf: 'flex-end',
+        bottom: theme.spacing(2),
+        right: theme.spacing(2),
+        margin: theme.spacing(2),
+    },
+    gutterBottom: {
+        marginBottom: theme.spacing(2),
+    },
 }))
 
 const HomeScreen = ({state, fetchQuizees, showQuizees, setQuizeeID, setViewerText}) => {
@@ -67,7 +81,7 @@ const HomeScreen = ({state, fetchQuizees, showQuizees, setQuizeeID, setViewerTex
                 // console.log(err)
                 const snackbarKey = enqueueSnackbar('Fetching error. 3 seconds timeout', {
                     variant: 'error',
-                    persist: true
+                    persist: true,
                 })
                 setTimeout(() => {
                     closeSnackbar(snackbarKey)
@@ -87,61 +101,88 @@ const HomeScreen = ({state, fetchQuizees, showQuizees, setQuizeeID, setViewerTex
     }, [history, setQuizeeID, setViewerText])
 
     return (
-        <Box maxWidth='lg' className={classes.root}>
-            <AppBar position='static'>
-                <Toolbar>
-                    <Typography variant='h5' component='h1'>Quizee APP</Typography>
-                </Toolbar>
-            </AppBar>
-            <Container maxWidth='lg'>
-                <Grid
-                    container
-                    direction='row'
-                    justify='center'
-                    className={classes.content}
-                >
-                    {
-                        state.loading
-                            ? <CircularProgress/>
-                            : state.quizeeList.map(quizee => (
-                                <Grid item className={classes.cardMargin} key={quizee.id}>
-                                    <Card className={classes.card}>
-                                        <CardMedia
-                                            className={classes.media}
-                                            image={quizee.img || 'http://placeimg.com/275/155/any'}
-                                        />
-                                        <CardContent>
-                                            <Typography variant='h5' component='h2' gutterBottom>
-                                                {quizee.caption}
-                                            </Typography>
-                                            <Typography variant="body2" color="textSecondary" component="p" noWrap>
-                                                Questions count: {quizee.questionsCount}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardActions>
-                                            <Button size='small' onClick={() => clickHandler(quizee.id, quizee.caption)}>Test my
-                                                brains!</Button>
-                                        </CardActions>
-                                    </Card>
-                                </Grid>
+        <Grid
+            className={classes.root}
+            container
+            direction='column'
+        >
+            <HideOnScroll>
+                <AppBar position='sticky'  className={classes.gutterBottom}>
+                    <Toolbar>
+                        <Typography variant='h5' component='h1'>Quizee APP</Typography>
+                    </Toolbar>
+                </AppBar>
+            </HideOnScroll>
+            <Box maxWidth='lg' style={{flexGrow: 1}}>
 
-                            ))
-                    }
-                </Grid>
-            </Container>
-        </Box>
+                <Container maxWidth='lg'>
+                    <Grid
+                        container
+                        direction='row'
+                        justify='center'
+                    >
+                        {
+                            state.loading
+                                ? <CircularProgress/>
+                                : state.quizeeList.map(quizee => (
+                                    <Grid item className={classes.cardMargin} key={quizee.id}>
+                                        <Card className={classes.card}>
+                                            <CardMedia
+                                                className={classes.media}
+                                                image={quizee.img || 'http://placeimg.com/275/155/any'}
+                                            />
+                                            <CardContent>
+                                                <Typography variant='h5' component='h2' gutterBottom>
+                                                    {quizee.caption}
+                                                </Typography>
+                                                <Typography variant="body2" color="textSecondary" component="p" noWrap>
+                                                    Questions count: {quizee.questionsCount}
+                                                </Typography>
+                                            </CardContent>
+                                            <CardActions>
+                                                <Button size='small'
+                                                        onClick={() => clickHandler(quizee.id, quizee.caption)}>Test
+                                                    my
+                                                    brains!</Button>
+                                            </CardActions>
+                                        </Card>
+                                    </Grid>
+
+                                ))
+                        }
+                    </Grid>
+                </Container>
+
+            </Box>
+            <div className={classes.stickyFab}>
+                <Fab color="primary" aria-label="add" onClick={() => history.push('/Creator')}>
+                    <EditIcon/>
+                </Fab>
+            </div>
+        </Grid>
+    )
+}
+
+function HideOnScroll(props) {
+    const {children} = props
+    const trigger = useScrollTrigger()
+
+    return (
+        <Slide appear={false} direction="down" in={!trigger}>
+            {children}
+        </Slide>
     )
 }
 
 const mapStateToProps = state => ({
-    state: state.Home
+    state: state.Home,
 })
 
 const mapDispatchToProps = {
     fetchQuizees,
     showQuizees,
     setQuizeeID,
-    setViewerText: setText
+    setViewerText: setText,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)

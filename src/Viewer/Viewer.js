@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import axios from 'axios'
 import { connect } from 'react-redux'
@@ -26,8 +26,13 @@ import { Grid, makeStyles, Toolbar } from '@material-ui/core'
 import { screenChangeTransitionTime as transitionTime, captionShowTime } from 'Viewer/constants'
 import { useHistory } from 'react-router-dom'
 import IsConstructorMode from './Context/IsConstructorModeContext'
+import flipMove from 'react-flip-move'
 
 const useStyles = makeStyles(theme => ({
+    constructorViewer: {
+      height: '100%',
+      width: '100%',
+    },
     screen: {
         flexGrow: 1,
     },
@@ -119,7 +124,7 @@ const Viewer = (props) => {
                 })
         }
         // eslint-disable-next-line
-    }, [props.ConstructorMode, props.updateTransitionKey, props.showCaptionScreen, props.setText, props.setLoading, props.setFooterButtonState, props.throwError])
+    }, [props.ConstructorMode, props.updateTransitionKey, props.showCaptionScreen, props.setText, props.setLoading, props.setFooterButtonState, props.throwError, props.state.answers])
 
     const pushAnswer = useMemo(() => {
             if (props.ConstructorMode) {
@@ -161,9 +166,9 @@ const Viewer = (props) => {
             value={pushAnswer}
         >
             <IsConstructorMode.Provider
-                value={props.ConstructorMode ? true : false}
+                value={props.ConstructorMode}
             >
-                <div className='Viewer'>
+                <div className={['Viewer', props.ConstructorMode ? classes.constructorViewer : ''].join(' ')}>
                     {
                         props.ConstructorMode
                             ? (<Grid container direction='column' className={classes.temp}>

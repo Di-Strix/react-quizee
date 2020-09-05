@@ -40,12 +40,12 @@ const AnswerOptions = ({state, question, config, classes, updateQuestion, update
         updateQuestion(questionCopy)
 
         const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
-        if (question.type == TYPES.SEVERAL_TRUE) {
-            if (stateAnswersCopy[state.selected].includes(id)) {
-                stateAnswersCopy[state.selected] = stateAnswersCopy[state.selected].filter(val => val !== id)
+        if (question.type === TYPES.SEVERAL_TRUE) {
+            if (stateAnswersCopy[state.selected].answer.includes(id)) {
+                stateAnswersCopy[state.selected].answer = stateAnswersCopy[state.selected].answer.filter(val => val !== id)
             }
         } else if (stateAnswersCopy[state.selected] === id) {
-            stateAnswersCopy[state.selected] = null
+            stateAnswersCopy[state.selected] = {answer: null, config: {}}
         }
         updateAnswers(stateAnswersCopy)
     }
@@ -58,16 +58,16 @@ const AnswerOptions = ({state, question, config, classes, updateQuestion, update
 
     const radioHandler = id => {
         const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
-        stateAnswersCopy[state.selected] = id
+        stateAnswersCopy[state.selected].answer = id
         updateAnswers(stateAnswersCopy)
     }
 
     const checkBoxHandler = (id) => {
         const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
-        if (stateAnswersCopy[state.selected].includes(id)) {
-            stateAnswersCopy[state.selected] = stateAnswersCopy[state.selected].filter(val => val !== id)
+        if (stateAnswersCopy[state.selected].answer.includes(id)) {
+            stateAnswersCopy[state.selected].answer = stateAnswersCopy[state.selected].answer.filter(val => val !== id)
         } else {
-            stateAnswersCopy[state.selected].push(id)
+            stateAnswersCopy[state.selected].answer.push(id)
         }
         updateAnswers(stateAnswersCopy)
     }
@@ -75,12 +75,12 @@ const AnswerOptions = ({state, question, config, classes, updateQuestion, update
     let ListAction
     if (question.type === TYPES.ONE_TRUE) {
         ListAction = id => (<Radio
-            checked={state.answers[state.selected] === id}
+            checked={state.answers[state.selected].answer === id}
             onChange={() => radioHandler(id)}
         />)
     } else {
         ListAction = id => (<Checkbox
-            checked={state.answers[state.selected].includes(id)}
+            checked={state.answers[state.selected].answer.includes(id)}
             onChange={() => checkBoxHandler(id)}
         />)
     }
@@ -101,7 +101,10 @@ const AnswerOptions = ({state, question, config, classes, updateQuestion, update
                             </ListItemIcon>
                             <ListItemText primary={
                                 <TextField
-                                    fullWidth value={answer.val}
+                                    fullWidth
+                                    value={answer.val}
+                                    error={answer.val.length <= 0}
+                                    multiline
                                     onChange={e => answerOptionChangeHandler(answer.id, e.target.value)}
                                 />
                             }/>

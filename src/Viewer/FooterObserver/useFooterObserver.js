@@ -4,7 +4,7 @@ import FooterObserver from './FooterObserver'
 export default function (initialState) {
     const [data, setData] = useState(initialState)
 
-    const setState = (state) => { 
+    const setState = (state) => {
         setData(state)
         FooterObserver.setData(state)
     }

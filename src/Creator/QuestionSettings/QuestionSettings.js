@@ -1,4 +1,4 @@
-import React from 'react'
+import React  from 'react'
 import { connect } from 'react-redux'
 import {
     Grid,
@@ -44,16 +44,22 @@ function QuestionSettings({question, updateQuestion, updateAnswers, state}) {
 
     const typeChangeHandler = ({target}) => {
         const questionCopy = JSON.parse(JSON.stringify(question))
+        const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
         questionCopy.type = TYPES[target.value] || TYPES.ONE_TRUE
         updateQuestion(questionCopy)
 
-        const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
         if(target.value === TYPES.SEVERAL_TRUE) {
-            stateAnswersCopy[state.selected] = []
+            stateAnswersCopy[state.selected].answer = []
         } else {
-            stateAnswersCopy[state.selected] = null
+            stateAnswersCopy[state.selected].answer = null
         }
         updateAnswers(stateAnswersCopy)
+    }
+
+    const captionChangeHandler = value => {
+            const questionCopy = JSON.parse(JSON.stringify(question))
+            questionCopy.caption = value
+            updateQuestion(questionCopy)
     }
 
     return (
@@ -71,8 +77,11 @@ function QuestionSettings({question, updateQuestion, updateAnswers, state}) {
                             Question caption
                         </Typography>
                         <Paper className={classes.section}>
-                            <TextField fullWidth value={question.caption}
-                                       onChange={e => updateQuestion({caption: e.target.value})}
+                            <TextField fullWidth
+                                       multiline
+                                       value={question.caption}
+                                       error={question.caption <= 0}
+                                       onChange={e => captionChangeHandler(e.target.value)}
                             />
                         </Paper>
                     </Grid>

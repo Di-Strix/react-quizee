@@ -1,10 +1,11 @@
 import React from 'react'
-import { makeStyles, Button, Grid, Paper, TextField, createMuiTheme } from '@material-ui/core'
+import { makeStyles, Button, Grid, Paper, TextField } from '@material-ui/core'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import AddIcon from '@material-ui/icons/Add'
 import { connect } from 'react-redux'
 import PreviewCard from './PreviewCard'
+import { updateQuizeeCaption } from 'redux/Creator/actions'
 
 const useStyles = makeStyles(theme => ({
     grow: {
@@ -30,15 +31,22 @@ const useStyles = makeStyles(theme => ({
     fit: {
         height: 'fit-content',
     },
+    innerShadow: {
+        boxShadow: 'inset 0px 11px 8px -10px #ccc, inset 0px -11px 8px -10px #ccc;',
+    },
 }))
 
-const QuestionsOverview = ({state, onAdd = () => {}}) => {
+const QuestionsOverview = ({state, onAdd = () => {}, onRemove = () => {}, updateQuizeeCaption}) => {
     const classes = useStyles()
 
     return (
         <React.Fragment>
             <Grid item className={classes.margin2}>
-                <TextField value={state.caption} fullWidth label='Quizee caption'/>
+                <TextField value={state.caption}
+                           onChange={e => updateQuizeeCaption(e.target.value)}
+                           fullWidth
+                           error={state.caption.length <= 0}
+                           label='Quizee caption'/>
             </Grid>
             <Grid
                 item
@@ -46,14 +54,23 @@ const QuestionsOverview = ({state, onAdd = () => {}}) => {
             >
                 <AutoSizer>
                     {({height, width}) => (
-                        <FixedSizeList
-                            height={height}
-                            itemCount={state.questions.length}
-                            itemSize={width / (16 / 9)}
-                            width={width}
-                        >
-                            {(props) => <PreviewCard {...props}/>}
-                        </FixedSizeList>
+                        <React.Fragment>
+                            <div className={classes.innerShadow} style={{
+                                height: height,
+                                width: width,
+                                position: 'absolute',
+                                zIndex: 100,
+                                pointerEvents: 'none',
+                            }}></div>
+                            <FixedSizeList
+                                height={height}
+                                itemCount={state.questions.length}
+                                itemSize={width / (16 / 9)}
+                                width={width}
+                            >
+                                {(props) => <PreviewCard {...props} onRemove={onRemove}/>}
+                            </FixedSizeList>
+                        </React.Fragment>
                     )}
                 </AutoSizer>
             </Grid>
@@ -71,6 +88,8 @@ const QuestionsOverview = ({state, onAdd = () => {}}) => {
 const mapStateToProps = state => ({
     state: state.Creator,
 })
+const mapDispatchToProps = {
+    updateQuizeeCaption,
+}
 
-
-export default connect(mapStateToProps, null)(QuestionsOverview)
+export default connect(mapStateToProps, mapDispatchToProps)(QuestionsOverview)

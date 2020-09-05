@@ -20,6 +20,18 @@ export const updateQuestion = (changes) => {
 export const updateAnswers = (answers) => {
     return {
         type: TYPES.UPDATE_ANSWERS,
-        payload: answers
+        payload: answers,
+    }
+}
+export const updateQuizeeCaption = caption => {
+    return {
+        type: TYPES.UPDATE_QUIZEE_CAPTION,
+        payload: caption,
+    }
+}
+export const updateQuestionsList = questions => {
+    return {
+        type: TYPES.UPDATE_QUESTIONS_LIST,
+        payload: questions,
     }
 }
