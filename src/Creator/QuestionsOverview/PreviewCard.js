@@ -49,7 +49,7 @@ function PreviewCard({index, style, setSelected = () => {}, onRemove = () => {},
                     size={'small'}
                     onPointerEnter={() => setButtonHover(true)}
                     onPointerLeave={() => setButtonHover(false)}
-                    color={buttonHover ? 'secondary' : ''}
+                    color={buttonHover ? 'secondary' : 'default'}
                     onClick={() => onRemove(index)}
                 >
                     <DeleteIcon/>

@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Grid, Container, TextField, makeStyles } from '@material-ui/core'
+import { screenChangeTransitionTime } from 'Viewer/constants'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -7,28 +8,33 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
     },
     input: {
-        width: '100%'
-    }
+        width: '100%',
+    },
 }))
 
-const AnswerField = ({ error = '', changeHandler = () => { }, submitHandler = () => { }, value = '', fieldRef }) => {
+const AnswerField = ({error = '', changeHandler = () => { }, submitHandler = () => { }, value = ''}) => {
     const classes = useStyles()
+    const fieldRef = React.useRef(null)
+
+    useEffect(() => {
+        setTimeout(() => {
+            fieldRef.current.focus()
+        }, screenChangeTransitionTime)
+    }, [])
 
     return (
         <Grid container className={classes.root}>
             <Container maxWidth='md'>
                 <form onSubmit={submitHandler} noValidate>
                     <TextField
-                        error={error ? true : false}
+                        error={!!error}
                         helperText={error || 'ok'}
                         label='Write your answer here'
-                        // InputProps={{ style: { padding: '.6rem' } }}
                         onChange={changeHandler}
                         value={value}
                         className={classes.input}
                         variant='filled'
-                        autoFocus
-                        ref={fieldRef}
+                        inputRef={fieldRef}
                         size='medium'
                     />
                 </form>

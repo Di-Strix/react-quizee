@@ -1,12 +1,15 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { connect } from 'react-redux'
-import { Grid, makeStyles, Divider, Typography, Button, AppBar, Toolbar } from '@material-ui/core'
+import { Grid, makeStyles, Divider, Typography, Button, AppBar, Toolbar, IconButton } from '@material-ui/core'
 import PublishIcon from '@material-ui/icons/Publish'
+import HomeIcon from '@material-ui/icons/Home'
 import Viewer from '../Viewer/Viewer'
 import QuestionsOverview from './QuestionsOverview/QuestionsOverview'
 import { createQuestion, setSelected, updateQuestionsList, updateAnswers } from 'redux/Creator/actions'
 import QuestionSettings from './QuestionSettings/QuestionSettings'
 import axios from 'axios'
+import { useSnackbar } from 'notistack'
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -34,11 +37,24 @@ const useStyles = makeStyles(theme => ({
     noWrap: {
         flexWrap: 'nowrap',
     },
-
+    homeButton: {
+        marginRight: theme.spacing(2),
+    },
 }))
+
+const defaultSnackSettings = {
+    anchorOrigin: {
+        vertical: 'bottom',
+        horizontal: 'right',
+    },
+    preventDuplicate: true,
+}
 
 const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updateAnswers}) => {
     const classes = useStyles()
+    const {enqueueSnackbar} = useSnackbar()
+    const [published, setPublished] = useState(false)
+    const history = useHistory()
 
     const questionCreateHandler = useCallback(() => {
         createQuestion()
@@ -55,29 +71,42 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
         updateAnswers(newAnswers)
     }, [state.questions, state.answers, updateQuestionsList, updateAnswers, setSelected])
 
+    const throwErrorMessage = message => {
+        enqueueSnackbar(message, {
+            ...defaultSnackSettings,
+            variant: 'error',
+        })
+    }
+    const throwSuccMessage = message => {
+        enqueueSnackbar(message, {
+            ...defaultSnackSettings,
+            variant: 'success',
+        })
+    }
+
     const publishHandler = () => {
         if (!state.caption.trim()) {
-            console.error('Caption cannot be empty')
+            throwErrorMessage('Caption cannot be empty')
             return
         }
         if (state.questions.length <= 0) {
-            console.error('Quizee must contain at least one question')
+            throwErrorMessage('Quizee must contain at least one question')
             return
         }
         const answerCheckSuccess = state.answers.every((answer, index) => {
             if (Array.isArray(answer.answer)) {
                 if (answer.answer.length <= 0) {
                     setSelected(index)
-                    console.error('Answer options should contain at least one option', index)
+                    throwErrorMessage('Answer options should contain at least one option', index)
                     return false
                 }
             } else if (answer.answer === null) {
                 setSelected(index)
-                console.error('Question must contain at least one true answer', index)
+                throwErrorMessage('Question must contain at least one true answer', index)
                 return false
             } else if (typeof answer.answer === 'string' && !answer.answer.trim()) {
                 setSelected(index)
-                console.error('Question answer must contain at least one character', index)
+                throwErrorMessage('Question answer must contain at least one character', index)
                 return false
             }
             return true
@@ -87,7 +116,7 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
         const questionsCheckSuccess = state.questions.every((question, index) => {
             if (!question.caption.trim()) {
                 setSelected(index)
-                console.error('Caption cannot be empty')
+                throwErrorMessage('Caption cannot be empty')
                 return false
             }
 
@@ -95,7 +124,7 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
                 const succ = question.answerOptions.every((answer) => answer.id !== null && answer.val.trim())
                 if (!succ) {
                     setSelected(index)
-                    console.error('Answer option cannot be empty')
+                    throwErrorMessage('Answer option cannot be empty')
                     return false
                 }
             }
@@ -112,10 +141,13 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
                 questions: state.questions,
             },
         }
-        console.log('all checks passed, publishing', dataToPublish)
+        throwSuccMessage('All checks passed, publishing...', dataToPublish)
         axios.post(process.env.REACT_APP_QUIZEE_DB_URL + 'quizees.json', dataToPublish).then(res => {
+            if (res.data.name) throwSuccMessage('Published successfully!')
+            else setPublished(false)
             console.log(res)
         })
+        setPublished(true)
     }
 
     return (
@@ -124,12 +156,27 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
             style={{width: '100vw', height: '100vh', flexWrap: 'nowrap'}}
             direction='column'
         >
-            <AppBar position="static">
+            <AppBar position='static'>
                 <Toolbar variant='dense'>
+                    <IconButton
+                        edge='start'
+                        color='inherit'
+                        className={classes.homeButton}
+                        onClick={() => {history.push('/')}}
+                    >
+                        <HomeIcon/>
+                    </IconButton>
                     <Typography variant='h5'>Creator</Typography>
                     <div style={{flexGrow: 1}}/>
-                    <Button onClick={publishHandler} variant='outlined' color="inherit"
-                            endIcon={<PublishIcon/>}>Publish</Button>
+                    <Button
+                        disabled={published}
+                        onClick={publishHandler}
+                        variant='outlined'
+                        color='inherit'
+                        endIcon={<PublishIcon/>}
+                    >
+                        Publish
+                    </Button>
                 </Toolbar>
             </AppBar>
             <Grid

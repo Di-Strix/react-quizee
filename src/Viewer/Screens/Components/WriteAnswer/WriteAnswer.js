@@ -62,23 +62,12 @@ const WriteAnswer = ({caption, setFooterButtonState, footerActive}) => {
     return (
         <Grid container className={classes.root} direction='column'>
             <Caption>{caption}</Caption>
-            <AnswerField changeHandler={changeHandler} value={state.value} submitHandler={(e) => FooterObserver.emit(e)}
-                         error={state.error}/>
-            {/* <form
-                    className='input-field'
-                    onSubmit={submitHandler}
-                >
-                    <input
-                        className='validate'
-                        value={value}
-                        onChange={changeHandler}
-                        type='text"'
-                        autoFocus={true}
-                        autoComplete='off'
-                        id='answer_field'
-                    />
-                    <label for='answer_field'>Type your answer here</label>
-                </form> */}
+            <AnswerField
+                changeHandler={changeHandler}
+                value={state.value}
+                submitHandler={(e) => FooterObserver.emit(e)}
+                error={state.error}
+            />
         </Grid>
     )
 }

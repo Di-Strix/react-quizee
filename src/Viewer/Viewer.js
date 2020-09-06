@@ -26,7 +26,6 @@ import { Grid, makeStyles, Toolbar } from '@material-ui/core'
 import { screenChangeTransitionTime as transitionTime, captionShowTime } from 'Viewer/constants'
 import { useHistory } from 'react-router-dom'
 import IsConstructorMode from './Context/IsConstructorModeContext'
-import flipMove from 'react-flip-move'
 
 const useStyles = makeStyles(theme => ({
     constructorViewer: {
@@ -39,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     grow: {
         flexGrow: 1,
     },
-    temp: {
+    fullHeight: {
         height: '100%',
     },
     offset: theme.mixins.toolbar,
@@ -157,7 +156,7 @@ const Viewer = (props) => {
             screen = <InfoScreen>{props.state.text}</InfoScreen>
             break
         default:
-            console.log('No screen found as requested:', props.state.screen)
+            console.error('No screen found as requested:', props.state.screen)
             break
     }
 
@@ -171,7 +170,7 @@ const Viewer = (props) => {
                 <div className={['Viewer', props.ConstructorMode ? classes.constructorViewer : ''].join(' ')}>
                     {
                         props.ConstructorMode
-                            ? (<Grid container direction='column' className={classes.temp}>
+                            ? (<Grid container direction='column' className={classes.fullHeight}>
                                 <Grid item className={classes.grow}>
                                     {screen}
                                 </Grid>
@@ -185,7 +184,7 @@ const Viewer = (props) => {
                                             mountOnEnter
                                             unmountOnExit
                                         >
-                                            <Grid container direction='column' className={classes.temp}>
+                                            <Grid container direction='column' className={classes.fullHeight}>
                                                 <Grid item className={classes.grow}>
                                                     {screen}
                                                 </Grid>
