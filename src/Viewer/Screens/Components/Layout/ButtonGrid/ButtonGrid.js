@@ -3,13 +3,9 @@ import { makeStyles, Button, Grid, Container, Zoom } from '@material-ui/core'
 import ToggleButton from '@material-ui/lab/ToggleButton'
 import { screenChangeTransitionTime } from 'Viewer/constants'
 import IsConstructorMode from 'Viewer/Context/IsConstructorModeContext'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
 const useStyles = makeStyles(theme => ({
-    buttonsGridContainer: {
-        flexGrow: 1,
-        justifyContent: 'flex-end',
-        marginBottom: theme.spacing(1),
-    },
     buttonsHolder: {
         margin: theme.spacing(2),
     },
@@ -23,18 +19,20 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const ButtonGrid = ({
-    answerOptions = [],
-    toggle = false,
-    handler = () => { },
-    props = {},
-    inTransitionDelay = screenChangeTransitionTime,
-    buttonTransitionDelay = 100,
-    selected = []
-}) => {
+                        answerOptions = [],
+                        toggle = false,
+                        handler = () => { },
+                        props = {},
+                        inTransitionDelay = screenChangeTransitionTime,
+                        buttonTransitionDelay = 100,
+                        selected = [],
+                    }) => {
 
     let ButtonAnim = Zoom
 
-    if(useContext(IsConstructorMode)) ButtonAnim = ({children}) => children
+    if (useContext(IsConstructorMode)) {
+        ButtonAnim = ({children}) => children
+    }
 
     const classes = useStyles()
     const defaultProps = {
@@ -66,39 +64,50 @@ const ButtonGrid = ({
 
     }
     return (
-        <Grid
-            container
-            className={classes.buttonsGridContainer}
-            direction='column'
-        >
-            <Container maxWidth='lg'>
-                <Grid
-                    container
-                    justify='center'
-                >
-                    {answerOptions.map((answerOption, index) =>
-                        <Grid
-                            item
-                            key={answerOption.id}
-                            xs={12}
-                            sm={3}
-                            className={classes.buttonsHolder}
-                        >
-                            <ButtonAnim in={true} style={{ transitionDelay: inTransitionDelay + index * buttonTransitionDelay }}>
-                                <div>
-                                    <ButtonNode
-                                        {...defaultProps}
-                                        {...additionalProps(answerOption.id, answerOption.val)}
+        <div style={{flexGrow: 1}}>
+            <AutoSizer>
+                {({height, width}) => (
+                    <Grid
+                        container
+                        direction='row'
+                        justify='center'
+                        style={{width, height, overflowY: 'auto'}}
+                    >
+                        <Container maxWidth='lg' style={{width, height}}>
+                            <Grid
+                                container
+                                alignItems='flex-end'
+                                alignContent='flex-end'
+                                justify='center'
+                                style={{height: '100%'}}
+                            >
+                                {answerOptions.map((answerOption, index) =>
+                                    <Grid
+                                        item
+                                        key={answerOption.id}
+                                        xs={12}
+                                        sm={3}
+                                        className={classes.buttonsHolder}
                                     >
-                                        {answerOption.val}
-                                    </ButtonNode>
-                                </div>
-                            </ButtonAnim>
-                        </Grid>
-                    )}
-                </Grid>
-            </Container>
-        </Grid>
+                                        <ButtonAnim in={true}
+                                                    style={{transitionDelay: inTransitionDelay + index * buttonTransitionDelay}}>
+                                            <div>
+                                                <ButtonNode
+                                                    {...defaultProps}
+                                                    {...additionalProps(answerOption.id, answerOption.val)}
+                                                >
+                                                    {answerOption.val}
+                                                </ButtonNode>
+                                            </div>
+                                        </ButtonAnim>
+                                    </Grid>,
+                                )}
+                            </Grid>
+                        </Container>
+                    </Grid>
+                )}
+            </AutoSizer>
+        </div>
     )
 }
 
