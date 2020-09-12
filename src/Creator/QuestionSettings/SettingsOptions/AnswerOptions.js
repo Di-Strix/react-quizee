@@ -15,15 +15,26 @@ import {
     Checkbox,
     ListItemIcon,
     Radio,
+    Tooltip,
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { updateQuestion, updateAnswers } from 'redux/Creator/actions'
 import DeleteIcon from '@material-ui/icons/Delete'
+import ErrorIcon from '@material-ui/icons/Error'
+import { checkAnswerOption, checkQuestion } from 'Creator/helperFunctions'
 
 const AnswerOptions = ({state, question, config, classes, updateQuestion, updateAnswers}) => {
     if (!config[question.type].includes(ANSWER_OPTIONS)) {
         return null
     }
+
+    const answersCheck = (() => {
+        let res = checkAnswerOption(state.answers[state.selected])
+        if (res.ok) {
+            res = checkQuestion(state.questions[state.selected])
+        }
+        return res
+    })()
 
     const answerOptionChangeHandler = (id, newCaption) => {
         const questionCopy = JSON.parse(JSON.stringify(question))
@@ -87,15 +98,22 @@ const AnswerOptions = ({state, question, config, classes, updateQuestion, update
 
     return (
         <Grid className={classes.marginBottom}>
-            <Grid container justify='space-between' alignItems='center'>
-                <Typography variant='h6'>Answer options</Typography>
+            <Grid container alignItems='center' justify='space-between'>
+                <Grid container alignItems='center' style={{width: 'auto'}}>
+                    <Typography variant='h6'>Answer options</Typography>
+                    {
+                        !answersCheck.ok &&
+                        <Tooltip title={<Typography variant='subtitle2'>{answersCheck.message}</Typography>}>
+                            <ErrorIcon className={classes.marginLeft} color='error'/>
+                        </Tooltip>
+                    }
+                </Grid>
                 <IconButton onClick={addHandler}><AddIcon/></IconButton>
             </Grid>
             <Paper className={classes.section}>
-
                 <List>
                     {question.answerOptions.map((answer) => (
-                        <ListItem key={answer.id}>
+                        <ListItem key={answer.id} style={{paddingLeft: 0}}>
                             <ListItemIcon style={{minWidth: 0}}>
                                 {ListAction(answer.id)}
                             </ListItemIcon>

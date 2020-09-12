@@ -10,6 +10,7 @@ import QuestionSettings from './QuestionSettings/QuestionSettings'
 import axios from 'axios'
 import { useSnackbar } from 'notistack'
 import { useHistory } from 'react-router-dom'
+import { checkAnswerOptions, checkQuestions } from './helperFunctions'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -93,46 +94,19 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
             throwErrorMessage('Quizee must contain at least one question')
             return
         }
-        const answerCheckSuccess = state.answers.every((answer, index) => {
-            if (Array.isArray(answer.answer)) {
-                if (answer.answer.length <= 0) {
-                    setSelected(index)
-                    throwErrorMessage('Answer options should contain at least one option', index)
-                    return false
-                }
-            } else if (answer.answer === null) {
-                setSelected(index)
-                throwErrorMessage('Question must contain at least one true answer', index)
-                return false
-            } else if (typeof answer.answer === 'string' && !answer.answer.trim()) {
-                setSelected(index)
-                throwErrorMessage('Question answer must contain at least one character', index)
-                return false
-            }
-            return true
-        })
-        if (!answerCheckSuccess) return
+        const answerCheckSuccess = checkAnswerOptions(state.answers)
+        if (!answerCheckSuccess.ok) {
+            throwErrorMessage(answerCheckSuccess.message)
+            setSelected(answerCheckSuccess.index)
+            return
+        }
 
-        const questionsCheckSuccess = state.questions.every((question, index) => {
-            if (!question.caption.trim()) {
-                setSelected(index)
-                throwErrorMessage('Caption cannot be empty')
-                return false
-            }
-
-            if (Array.isArray(question.answerOptions)) {
-                const succ = question.answerOptions.every((answer) => answer.id !== null && answer.val.trim())
-                if (!succ) {
-                    setSelected(index)
-                    throwErrorMessage('Answer option cannot be empty')
-                    return false
-                }
-            }
-
-            return true
-        })
-
-        if (!questionsCheckSuccess) return
+        const questionsCheckSuccess = checkQuestions(state.questions)
+        if (!questionsCheckSuccess.ok) {
+            throwErrorMessage(questionsCheckSuccess.message)
+            setSelected(questionsCheckSuccess.index)
+            return
+        }
 
         const dataToPublish = {
             answers: state.answers,

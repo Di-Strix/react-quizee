@@ -16,6 +16,11 @@ const useStyles = makeStyles(theme => ({
         textTransform: 'none',
         color: theme.palette.text.primary,
     },
+    preTag: {
+        fontFamily: theme.typography.fontFamily,
+        margin: '0',
+        whiteSpace: 'normal'
+    }
 }))
 
 const ButtonGrid = ({
@@ -51,7 +56,6 @@ const ButtonGrid = ({
                 onChange: () => handler(id, text),
                 selected: selected[id] || false,
                 value: id,
-                // size: 'large',
                 ...props,
             }
         }
@@ -96,7 +100,9 @@ const ButtonGrid = ({
                                                     {...defaultProps}
                                                     {...additionalProps(answerOption.id, answerOption.val)}
                                                 >
-                                                    {answerOption.val}
+                                                    <pre className={classes.preTag}>
+                                                        {answerOption.val}
+                                                    </pre>
                                                 </ButtonNode>
                                             </div>
                                         </ButtonAnim>

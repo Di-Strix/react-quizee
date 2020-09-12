@@ -37,6 +37,9 @@ const useStyles = makeStyles(theme => ({
     section: {
         padding: theme.spacing(1.6),
     },
+    marginLeft: {
+        marginLeft: theme.spacing(1),
+    },
 }))
 
 function QuestionSettings({question, updateQuestion, updateAnswers, state}) {
@@ -85,7 +88,7 @@ function QuestionSettings({question, updateQuestion, updateAnswers, state}) {
                             />
                         </Paper>
                     </Grid>
-                    <Grid>
+                    <Grid className={classes.marginBottom}>
                         <Grid container justify='space-between' alignItems='center'>
                             <Typography variant='h6' gutterBottom>Question type</Typography>
                         </Grid>

@@ -60,8 +60,13 @@ const SeveralTrue = ({caption, answerOptions, requiredAnswerCount = 1, footerAct
             direction='column'
         >
             <Caption>{caption}</Caption>
-            <ButtonGrid toggle answerOptions={answerOptions} checked={selected} handler={clickHandler}
-                        selected={selected}/>
+            <ButtonGrid
+                toggle
+                answerOptions={answerOptions}
+                checked={selected}
+                handler={clickHandler}
+                selected={selected}
+            />
         </Grid>
         //     <h1 className={classPrefix + '__question'}>{caption}</h1>
         //     <div className={classPrefix + '__buttons'}>

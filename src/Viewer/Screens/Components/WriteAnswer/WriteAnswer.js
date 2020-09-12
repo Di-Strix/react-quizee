@@ -1,5 +1,5 @@
 import { Grid, makeStyles } from '@material-ui/core'
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useContext } from 'react'
 import { connect } from 'react-redux'
 import { setFooterButtonState } from 'redux/Viewer/actions'
 import AnswerHandlerContext from '../../../Context/AnswerHandlerContext'
@@ -7,6 +7,7 @@ import AnswerField from '../Layout/AnswerField/AnswerField'
 import Caption from '../Layout/Caption/Caption'
 import FooterObserver from 'Viewer/FooterObserver/FooterObserver'
 import useFooterObserver from 'Viewer/FooterObserver/useFooterObserver'
+import IsConstructorMode from 'Viewer/Context/IsConstructorModeContext'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -67,6 +68,7 @@ const WriteAnswer = ({caption, setFooterButtonState, footerActive}) => {
                 value={state.value}
                 submitHandler={(e) => FooterObserver.emit(e)}
                 error={state.error}
+                autoFocus={!useContext(IsConstructorMode)}
             />
         </Grid>
     )

@@ -12,14 +12,17 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const AnswerField = ({error = '', changeHandler = () => { }, submitHandler = () => { }, value = ''}) => {
+const AnswerField = ({error = '', changeHandler = () => { }, submitHandler = () => { }, value = '', autoFocus = false}) => {
     const classes = useStyles()
     const fieldRef = React.useRef(null)
 
     useEffect(() => {
-        setTimeout(() => {
-            fieldRef.current.focus()
-        }, screenChangeTransitionTime)
+        if (autoFocus) {
+            setTimeout(() => {
+                fieldRef.current.focus()
+            }, screenChangeTransitionTime)
+        }
+        //eslint-disable-next-line
     }, [])
 
     return (
