@@ -6,7 +6,6 @@ const initialState = {
     answers: [],
     caption: 'New Quizee',
     selected: -1,
-    thumbnails: [],
 }
 
 const questionInitialState = {

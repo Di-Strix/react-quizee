@@ -1,4 +1,4 @@
-import React  from 'react'
+import React, { useCallback, useState } from 'react'
 import { connect } from 'react-redux'
 import {
     Grid,
@@ -7,6 +7,7 @@ import {
     Paper,
     Select,
     MenuItem,
+    debounce
 } from '@material-ui/core'
 import * as TYPES from 'redux/questionTypes'
 import { ANSWER_OPTIONS, ANSWER_INPUT } from '../types'
@@ -42,16 +43,23 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-function QuestionSettings({question, updateQuestion, updateAnswers, state}) {
+function QuestionSettings({ question, updateQuestion, updateAnswers, state }) {
     const classes = useStyles()
+    const [caption, setCaption] = useState(() => question.caption)
 
-    const typeChangeHandler = ({target}) => {
+    const dispatchToStore = useCallback(debounce(value => {
+        const questionCopy = JSON.parse(JSON.stringify(question))
+        questionCopy.caption = value
+        updateQuestion(questionCopy)
+    }, 300), [question, updateQuestion])
+
+    const typeChangeHandler = ({ target }) => {
         const questionCopy = JSON.parse(JSON.stringify(question))
         const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
         questionCopy.type = TYPES[target.value] || TYPES.ONE_TRUE
         updateQuestion(questionCopy)
 
-        if(target.value === TYPES.SEVERAL_TRUE) {
+        if (target.value === TYPES.SEVERAL_TRUE) {
             stateAnswersCopy[state.selected].answer = []
         } else {
             stateAnswersCopy[state.selected].answer = null
@@ -60,13 +68,12 @@ function QuestionSettings({question, updateQuestion, updateAnswers, state}) {
     }
 
     const captionChangeHandler = value => {
-            const questionCopy = JSON.parse(JSON.stringify(question))
-            questionCopy.caption = value
-            updateQuestion(questionCopy)
+        setCaption(value)
+        dispatchToStore(value)
     }
 
     return (
-        <Grid style={{height: '100%', width: '100%', overflowY: 'auto'}}>
+        <Grid style={{ height: '100%', width: '100%', overflowY: 'auto' }}>
             <Grid
                 item
                 className={classes.margin}
@@ -81,10 +88,10 @@ function QuestionSettings({question, updateQuestion, updateAnswers, state}) {
                         </Typography>
                         <Paper className={classes.section}>
                             <TextField fullWidth
-                                       multiline
-                                       value={question.caption}
-                                       error={question.caption <= 0}
-                                       onChange={e => captionChangeHandler(e.target.value)}
+                                multiline
+                                value={caption}
+                                error={caption <= 0}
+                                onChange={e => captionChangeHandler(e.target.value)}
                             />
                         </Paper>
                     </Grid>
@@ -93,7 +100,7 @@ function QuestionSettings({question, updateQuestion, updateAnswers, state}) {
                             <Typography variant='h6' gutterBottom>Question type</Typography>
                         </Grid>
                         <Paper className={classes.section}>
-                            <Select value={question.type} onChange={typeChangeHandler} style={{width: '100%'}}>
+                            <Select value={question.type} onChange={typeChangeHandler} style={{ width: '100%' }}>
                                 <MenuItem value={TYPES.ONE_TRUE}>One true</MenuItem>
                                 <MenuItem value={TYPES.SEVERAL_TRUE}>Several true</MenuItem>
                                 <MenuItem value={TYPES.WRITE_ANSWER}>Write answer</MenuItem>
@@ -102,12 +109,11 @@ function QuestionSettings({question, updateQuestion, updateAnswers, state}) {
                     </Grid>
 
                     {
-                        Object.keys(SettingsOptions).map(key => {
+                        CONFIG[question.type].map(key => {
                             const Option = SettingsOptions[key]
                             return (
                                 <Option
                                     key={key}
-                                    config={CONFIG}
                                     classes={classes}
                                 />
                             )

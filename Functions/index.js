@@ -16,7 +16,7 @@ exports.getQuizeesList = functions.https.onRequest(async (_, res) => {
   try {
     let data = {}
 
-    await admin.database().ref('quizees').once('value', snapshot => data = snapshot.val())
+    await admin.database().ref('quizees').limitToFirst(50).once('value', snapshot => data = snapshot.val())
     const responseData = Object.keys(data).map((quizeeId) => ({
       caption: data[quizeeId].content.caption,
       img: data[quizeeId].content.img || "",

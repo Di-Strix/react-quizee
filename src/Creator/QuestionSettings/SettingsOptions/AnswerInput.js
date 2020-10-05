@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
     Grid,
     List,
@@ -10,6 +10,7 @@ import {
     ListItemIcon,
     Checkbox,
     Tooltip,
+    debounce
 } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { updateAnswers } from 'redux/Creator/actions'
@@ -19,26 +20,20 @@ import { checkAnswerOption } from 'Creator/helperFunctions'
 
 const configKeys = ['equalCase']
 
-const AnswerInput = ({config, updateAnswers, question, classes, state, answer}) => {
-    // debugger
-    const shouldNotRender = !config[question.type].includes(ANSWER_INPUT)
+const AnswerInput = ({updateAnswers, question, classes, state, answer}) => {
+    const [inputValue, setInputValue] = useState(() => answer.answer)
 
-    useEffect(() => {
-        if (!shouldNotRender)
-            answerChangeHandler('')
-        //eslint-disable-next-line
-    }, [shouldNotRender])
-
-    if (shouldNotRender) {
-        return null
-    }
+    const dispatchToStore = useCallback(debounce(value => {
+        const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
+        stateAnswersCopy[state.selected].answer = value
+        updateAnswers(stateAnswersCopy)
+    }, 300), [state, updateAnswers])
 
     const answersCheck = checkAnswerOption(state.answers[state.selected])
 
     const answerChangeHandler = value => {
-        const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
-        stateAnswersCopy[state.selected].answer = value
-        updateAnswers(stateAnswersCopy)
+        setInputValue(value)
+        dispatchToStore(value)
     }
 
     const configChangeHandler = key => {
@@ -65,8 +60,8 @@ const AnswerInput = ({config, updateAnswers, question, classes, state, answer}) 
                         <ListItemText primary={
                             <TextField
                                 fullWidth
-                                value={answer.answer || ''}
-                                error={!Boolean(answer.answer && answer.answer.length >= 0)}
+                                value={inputValue || ''}
+                                error={!Boolean(inputValue && inputValue.length >= 0)}
                                 onChange={e => answerChangeHandler(e.target.value)}
                             />
                         }/>

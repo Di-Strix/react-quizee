@@ -1,5 +1,5 @@
-import React from 'react'
-import { makeStyles, Button, Grid, Paper, TextField } from '@material-ui/core'
+import React, { useCallback, useState } from 'react'
+import { makeStyles, Button, Grid, Paper, TextField, debounce } from '@material-ui/core'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import AddIcon from '@material-ui/icons/Add'
@@ -36,24 +36,36 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const QuestionsOverview = ({state, onAdd = () => {}, onRemove = () => {}, updateQuizeeCaption}) => {
+const QuestionsOverview = ({ state, onAdd = () => { }, onRemove = () => { }, updateQuizeeCaption }) => {
     const classes = useStyles()
+    const [caption, setCaption] = useState(() => state.caption)
+
+    const dispatchToStore = useCallback(
+        debounce(val => {
+            updateQuizeeCaption(val)
+        }, 300),
+        [updateQuizeeCaption])
+
+    const setCaptionWithDispatch = useCallback(val => {
+        setCaption(val)
+        dispatchToStore(val)
+    }, [dispatchToStore, setCaption])
 
     return (
         <React.Fragment>
             <Grid item className={classes.margin2}>
-                <TextField value={state.caption}
-                           onChange={e => updateQuizeeCaption(e.target.value)}
-                           fullWidth
-                           error={state.caption.length <= 0}
-                           label='Quizee caption'/>
+                <TextField value={caption}
+                    onChange={e => setCaptionWithDispatch(e.target.value)}
+                    fullWidth
+                    error={state.caption.length <= 0}
+                    label='Quizee caption' />
             </Grid>
             <Grid
                 item
                 className={[classes.grow, classes.cardsMargin].join(' ')}
             >
                 <AutoSizer>
-                    {({height, width}) => (
+                    {({ height, width }) => (
                         <React.Fragment>
                             <div className={classes.innerShadow} style={{
                                 height: height,
@@ -68,7 +80,7 @@ const QuestionsOverview = ({state, onAdd = () => {}, onRemove = () => {}, update
                                 itemSize={width / (16 / 9)}
                                 width={width}
                             >
-                                {(props) => <PreviewCard {...props} onRemove={onRemove}/>}
+                                {(props) => <PreviewCard {...props} onRemove={onRemove} />}
                             </FixedSizeList>
                         </React.Fragment>
                     )}
@@ -77,7 +89,7 @@ const QuestionsOverview = ({state, onAdd = () => {}, onRemove = () => {}, update
             <Grid container justify='center' className={classes.marginBottom2}>
                 <Grid item xs={12} lg={6}>
                     <Paper variant='outlined'>
-                        <Button onClick={onAdd} className={classes.takeAllSpace}><AddIcon/></Button>
+                        <Button onClick={onAdd} className={classes.takeAllSpace}><AddIcon /></Button>
                     </Paper>
                 </Grid>
             </Grid>

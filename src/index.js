@@ -3,7 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import { compose, createStore } from 'redux'
+import { compose, createStore, applyMiddleware } from 'redux'
 import './index.scss'
 import { rootReducer } from './redux/rootReducer'
 import * as serviceWorker from './serviceWorker'
@@ -11,8 +11,10 @@ import HomeScreen from 'Home/Home'
 import Viewer from 'Viewer/Viewer'
 import { SnackbarProvider } from 'notistack'
 import Creator from './Creator/Creator'
+import thunk from 'redux-thunk'
 
 const store = createStore(rootReducer, compose(
+    applyMiddleware(thunk),
     process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 ))
 
@@ -30,13 +32,13 @@ ReactDOM.render(
                     <BrowserRouter>
                         <Switch>
                             <Route path='/' exact>
-                                <HomeScreen/>
+                                <HomeScreen />
                             </Route>
                             <Route path='/Viewer'>
-                                <Viewer/>
+                                <Viewer />
                             </Route>
                             <Route path='/Creator'>
-                                <Creator/>
+                                <Creator />
                             </Route>
                         </Switch>
                     </BrowserRouter>

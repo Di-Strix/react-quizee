@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { ANSWER_OPTIONS } from 'Creator/types'
 import { connect } from 'react-redux'
 import * as TYPES from 'redux/questionTypes'
@@ -16,6 +16,7 @@ import {
     ListItemIcon,
     Radio,
     Tooltip,
+    debounce
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { updateQuestion, updateAnswers } from 'redux/Creator/actions'
@@ -23,32 +24,41 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import ErrorIcon from '@material-ui/icons/Error'
 import { checkAnswerOption, checkQuestion } from 'Creator/helperFunctions'
 
-const AnswerOptions = ({state, question, config, classes, updateQuestion, updateAnswers}) => {
-    if (!config[question.type].includes(ANSWER_OPTIONS)) {
-        return null
-    }
+const AnswerOptions = ({ state, question, classes, updateQuestion, updateAnswers }) => {
+    const [answerOptions, setAnswerOptions] = useState(() => question.answerOptions)
 
-    const answersCheck = (() => {
+    const generateNewAnswerList = useCallback((id, newCaption) => {
+        const questionCopy = JSON.parse(JSON.stringify(question))
+        const index = questionCopy.answerOptions.findIndex(value => value.id === id)
+        if (index < 0) return
+        questionCopy.answerOptions[index] = { ...questionCopy.answerOptions[index], val: newCaption }
+        return questionCopy
+    }, [question])
+
+    const dispatchToStore = useCallback(debounce((id, newCaption) => {
+        updateQuestion(generateNewAnswerList(id, newCaption))
+    }, 300), [updateQuestion, generateNewAnswerList])
+
+
+    const answersCheck = useMemo(() => {
         let res = checkAnswerOption(state.answers[state.selected])
         if (res.ok) {
             res = checkQuestion(state.questions[state.selected])
         }
         return res
-    })()
+    }, [state])
 
-    const answerOptionChangeHandler = (id, newCaption) => {
-        const questionCopy = JSON.parse(JSON.stringify(question))
-        const index = questionCopy.answerOptions.findIndex(value => value.id === id)
-        if (index < 0) return
-        questionCopy.answerOptions[index] = {...questionCopy.answerOptions[index], val: newCaption}
-        updateQuestion(questionCopy)
-    }
+    const answerOptionChangeHandler = useCallback((id, newCaption) => {
+        setAnswerOptions(generateNewAnswerList(id, newCaption).answerOptions)
+        dispatchToStore(id, newCaption)
+    }, [setAnswerOptions, dispatchToStore, generateNewAnswerList])
 
     const deleteHandler = (id) => {
         if (question.answerOptions.length <= 1) return
         const questionCopy = JSON.parse(JSON.stringify(question))
         questionCopy.answerOptions = questionCopy.answerOptions.filter(answer => answer.id !== id)
         updateQuestion(questionCopy)
+        setAnswerOptions(questionCopy.answerOptions)
 
         const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
         if (question.type === TYPES.SEVERAL_TRUE) {
@@ -56,15 +66,16 @@ const AnswerOptions = ({state, question, config, classes, updateQuestion, update
                 stateAnswersCopy[state.selected].answer = stateAnswersCopy[state.selected].answer.filter(val => val !== id)
             }
         } else if (stateAnswersCopy[state.selected] === id) {
-            stateAnswersCopy[state.selected] = {answer: null, config: {}}
+            stateAnswersCopy[state.selected] = { answer: null, config: {} }
         }
         updateAnswers(stateAnswersCopy)
     }
 
     const addHandler = () => {
         const questionCopy = JSON.parse(JSON.stringify(question))
-        questionCopy.answerOptions.push({id: new Date().getTime(), val: 'Answer'})
+        questionCopy.answerOptions.push({ id: new Date().getTime(), val: 'Answer' })
         updateQuestion(questionCopy)
+        setAnswerOptions(questionCopy.answerOptions)
     }
 
     const radioHandler = id => {
@@ -99,22 +110,22 @@ const AnswerOptions = ({state, question, config, classes, updateQuestion, update
     return (
         <Grid className={classes.marginBottom}>
             <Grid container alignItems='center' justify='space-between'>
-                <Grid container alignItems='center' style={{width: 'auto'}}>
+                <Grid container alignItems='center' style={{ width: 'auto' }}>
                     <Typography variant='h6'>Answer options</Typography>
                     {
                         !answersCheck.ok &&
                         <Tooltip title={<Typography variant='subtitle2'>{answersCheck.message}</Typography>}>
-                            <ErrorIcon className={classes.marginLeft} color='error'/>
+                            <ErrorIcon className={classes.marginLeft} color='error' />
                         </Tooltip>
                     }
                 </Grid>
-                <IconButton onClick={addHandler}><AddIcon/></IconButton>
+                <IconButton onClick={addHandler}><AddIcon /></IconButton>
             </Grid>
             <Paper className={classes.section}>
                 <List>
-                    {question.answerOptions.map((answer) => (
-                        <ListItem key={answer.id} style={{paddingLeft: 0}}>
-                            <ListItemIcon style={{minWidth: 0}}>
+                    {answerOptions.map(answer => (
+                        <ListItem key={answer.id} style={{ paddingLeft: 0 }}>
+                            <ListItemIcon style={{ minWidth: 0 }}>
                                 {ListAction(answer.id)}
                             </ListItemIcon>
                             <ListItemText primary={
@@ -125,11 +136,11 @@ const AnswerOptions = ({state, question, config, classes, updateQuestion, update
                                     multiline
                                     onChange={e => answerOptionChangeHandler(answer.id, e.target.value)}
                                 />
-                            }/>
+                            } />
                             <ListItemSecondaryAction>
                                 <IconButton edge='end' onClick={() => deleteHandler(answer.id)}
-                                            disabled={question.answerOptions.length <= 1}>
-                                    <DeleteIcon/>
+                                    disabled={question.answerOptions.length <= 1}>
+                                    <DeleteIcon />
                                 </IconButton>
                             </ListItemSecondaryAction>
                         </ListItem>
