@@ -110,7 +110,7 @@ const Viewer = (props) => {
             props.setFooterButtonState(false)
 
             axios.get(process.env.REACT_APP_QUIZEE_API_URL + 'checkAnswers?data='
-                + JSON.stringify({quizeeId: props.state.quizeeId, answers: [...props.state.answers, lastAnswer]}))
+                + JSON.stringify({quizeeId: props.state.quizeeId, answers: [...props.state.answers, lastAnswer]}, null, 0))
                 .then(res => {
                     setTimeout(() => {
                         props.updateTransitionKey()

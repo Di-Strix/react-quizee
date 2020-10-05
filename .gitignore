@@ -25,6 +25,3 @@ yarn-error.log*
 #editors
 .vscode
 .idea
-
-#cloud functions
-functions
