@@ -14,24 +14,8 @@ const CONFIG = {
 }
 
 const useStyles = makeStyles(theme => ({
-    takeAllSpace: {
-        height: '100%',
-        width: '100%',
-    },
-    grow: {
-        flexGrow: 1,
-    },
     margin: {
         margin: theme.spacing(1.5),
-    },
-    marginBottom: {
-        marginBottom: theme.spacing(2),
-    },
-    section: {
-        padding: theme.spacing(1.6),
-    },
-    marginLeft: {
-        marginLeft: theme.spacing(1),
     },
 }))
 
@@ -44,25 +28,18 @@ function QuestionSettings({ question }) {
                 item
                 className={classes.margin}
             >
-                <Grid
-                    container
-                    direction='column'
-                >
-                    {
-                        CONFIG[question.type].map(key => {
-                            const Option = SettingsOptions[key]
-                            return (
-                                <Option
-                                    key={key}
-                                    classes={classes}
-                                />
-                            )
-                        })
-                    }
-                </Grid>
+                {
+                    CONFIG[question.type].map(key => {
+                        const Option = SettingsOptions[key]
+                        return (
+                            <Option
+                                key={key}
+                            />
+                        )
+                    })
+                }
             </Grid>
         </Grid>
-
     )
 }
 

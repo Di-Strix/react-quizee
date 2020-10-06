@@ -3,28 +3,24 @@ import { ANSWER_OPTIONS } from 'Creator/types'
 import { connect } from 'react-redux'
 import * as TYPES from 'redux/questionTypes'
 import {
-    Grid,
     IconButton,
     List,
     ListItem,
     ListItemSecondaryAction,
     ListItemText,
-    Paper,
     TextField,
-    Typography,
     Checkbox,
     ListItemIcon,
     Radio,
-    Tooltip,
     debounce
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import { updateQuestion, updateAnswers } from 'redux/Creator/actions'
 import DeleteIcon from '@material-ui/icons/Delete'
-import ErrorIcon from '@material-ui/icons/Error'
 import { checkAnswerOption, checkQuestion } from 'Creator/helperFunctions'
+import SettingsCard from '../Components/SettingsCard'
 
-const AnswerOptions = ({ state, question, classes, updateQuestion, updateAnswers }) => {
+const AnswerOptions = ({ state, question, updateQuestion, updateAnswers }) => {
     const [answerOptions, setAnswerOptions] = useState(question.answerOptions)
 
     useEffect(() => setAnswerOptions(question.answerOptions), [question])
@@ -110,46 +106,37 @@ const AnswerOptions = ({ state, question, classes, updateQuestion, updateAnswers
     }
 
     return (
-        <Grid className={classes.marginBottom}>
-            <Grid container alignItems='center' justify='space-between'>
-                <Grid container alignItems='center' style={{ width: 'auto' }}>
-                    <Typography variant='h6'>Answer options</Typography>
-                    {
-                        !answersCheck.ok &&
-                        <Tooltip title={<Typography variant='subtitle2'>{answersCheck.message}</Typography>}>
-                            <ErrorIcon className={classes.marginLeft} color='error' />
-                        </Tooltip>
-                    }
-                </Grid>
-                <IconButton onClick={addHandler}><AddIcon /></IconButton>
-            </Grid>
-            <Paper className={classes.section}>
-                <List>
-                    {answerOptions.map(answer => (
-                        <ListItem key={answer.id} style={{ paddingLeft: 0 }}>
-                            <ListItemIcon style={{ minWidth: 0 }}>
-                                {ListAction(answer.id)}
-                            </ListItemIcon>
-                            <ListItemText primary={
-                                <TextField
-                                    fullWidth
-                                    value={answer.val}
-                                    error={answer.val.length <= 0}
-                                    multiline
-                                    onChange={e => answerOptionChangeHandler(answer.id, e.target.value)}
-                                />
-                            } />
-                            <ListItemSecondaryAction>
-                                <IconButton edge='end' onClick={() => deleteHandler(answer.id)}
-                                    disabled={question.answerOptions.length <= 1}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                    ))}
-                </List>
-            </Paper>
-        </Grid>
+        <SettingsCard
+            heading={'Answer options'}
+            showError={!answersCheck.ok}
+            errorMessage={answersCheck.message}
+            AdditionalAction={<IconButton onClick={addHandler}><AddIcon /></IconButton>}
+        >
+            <List>{
+                answerOptions.map(answer => (
+                    <ListItem key={answer.id} style={{ paddingLeft: 0 }}>
+                        <ListItemIcon style={{ minWidth: 0 }}>
+                            {ListAction(answer.id)}
+                        </ListItemIcon>
+                        <ListItemText primary={
+                            <TextField
+                                fullWidth
+                                value={answer.val}
+                                error={answer.val.length <= 0}
+                                multiline
+                                onChange={e => answerOptionChangeHandler(answer.id, e.target.value)}
+                            />
+                        } />
+                        <ListItemSecondaryAction>
+                            <IconButton edge='end' onClick={() => deleteHandler(answer.id)}
+                                disabled={question.answerOptions.length <= 1}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </ListItemSecondaryAction>
+                    </ListItem>
+                ))
+            }</List>
+        </SettingsCard>
     )
 }
 

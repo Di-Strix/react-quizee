@@ -1,15 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { connect } from 'react-redux'
-import {
-    Grid,
-    Typography,
-    Paper,
-    TextField,
-    debounce
-} from '@material-ui/core'
+import { TextField, debounce } from '@material-ui/core'
 import { updateQuestion } from 'redux/Creator/actions'
+import SettingsCard from '../Components/SettingsCard'
 
-const QuestionCaption = ({ classes, question, updateQuestion }) => {
+const QuestionCaption = ({ question, updateQuestion }) => {
 
     const [caption, setCaption] = useState(question.caption)
 
@@ -28,19 +23,14 @@ const QuestionCaption = ({ classes, question, updateQuestion }) => {
     }
 
     return (
-        <Grid className={classes.marginBottom}>
-            <Typography variant='h6' gutterBottom>
-                Question caption
-            </Typography>
-            <Paper className={classes.section}>
-                <TextField fullWidth
-                    multiline
-                    value={caption}
-                    error={caption <= 0}
-                    onChange={e => captionChangeHandler(e.target.value)}
-                />
-            </Paper>
-        </Grid>
+        <SettingsCard heading={'Question caption'}>
+            <TextField fullWidth
+                multiline
+                value={caption}
+                error={caption <= 0}
+                onChange={e => captionChangeHandler(e.target.value)}
+            />
+        </SettingsCard>
     )
 }
 
