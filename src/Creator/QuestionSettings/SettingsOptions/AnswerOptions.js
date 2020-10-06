@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ANSWER_OPTIONS } from 'Creator/types'
 import { connect } from 'react-redux'
 import * as TYPES from 'redux/questionTypes'
@@ -25,7 +25,9 @@ import ErrorIcon from '@material-ui/icons/Error'
 import { checkAnswerOption, checkQuestion } from 'Creator/helperFunctions'
 
 const AnswerOptions = ({ state, question, classes, updateQuestion, updateAnswers }) => {
-    const [answerOptions, setAnswerOptions] = useState(() => question.answerOptions)
+    const [answerOptions, setAnswerOptions] = useState(question.answerOptions)
+
+    useEffect(() => setAnswerOptions(question.answerOptions), [question])
 
     const generateNewAnswerList = useCallback((id, newCaption) => {
         const questionCopy = JSON.parse(JSON.stringify(question))

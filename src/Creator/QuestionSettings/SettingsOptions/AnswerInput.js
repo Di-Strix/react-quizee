@@ -20,7 +20,7 @@ import { checkAnswerOption } from 'Creator/helperFunctions'
 
 const configKeys = ['equalCase']
 
-const AnswerInput = ({updateAnswers, question, classes, state, answer}) => {
+const AnswerInput = ({updateAnswers, classes, state, answer}) => {
     const [inputValue, setInputValue] = useState(() => answer.answer)
 
     const dispatchToStore = useCallback(debounce(value => {
