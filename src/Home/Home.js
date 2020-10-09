@@ -56,15 +56,15 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const HomeScreen = ({state, fetchQuizees, showQuizees, setQuizeeID, setViewerText}) => {
+const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerText, dictionary }) => {
     const classes = useStyles()
     const history = useHistory()
-    const {enqueueSnackbar, closeSnackbar} = useSnackbar()
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
     const startFetchingQuizees = useCallback(() => {
         fetchQuizees()
 
-        axios.get(process.env.REACT_APP_QUIZEE_API_URL + 'getQuizeesList', {timeout: 5000})
+        axios.get(process.env.REACT_APP_QUIZEE_API_URL + 'getQuizeesList', { timeout: 5000 })
             .then(res => res.data)
             .then(data => {
                 if (data.ok) {
@@ -107,13 +107,13 @@ const HomeScreen = ({state, fetchQuizees, showQuizees, setQuizeeID, setViewerTex
             direction='column'
         >
             <HideOnScroll>
-                <AppBar position='sticky'  className={classes.gutterBottom}>
+                <AppBar position='sticky' className={classes.gutterBottom}>
                     <Toolbar>
                         <Typography variant='h5' component='h1'>Quizee APP</Typography>
                     </Toolbar>
                 </AppBar>
             </HideOnScroll>
-            <Box maxWidth='lg' style={{flexGrow: 1}}>
+            <Box maxWidth='lg' style={{ flexGrow: 1 }}>
 
                 <Container maxWidth='lg'>
                     <Grid
@@ -123,7 +123,7 @@ const HomeScreen = ({state, fetchQuizees, showQuizees, setQuizeeID, setViewerTex
                     >
                         {
                             state.loading
-                                ? <CircularProgress/>
+                                ? <CircularProgress />
                                 : state.quizeeList.map(quizee => (
                                     <Grid item className={classes.cardMargin} key={quizee.id}>
                                         <Card className={classes.card}>
@@ -136,18 +136,17 @@ const HomeScreen = ({state, fetchQuizees, showQuizees, setQuizeeID, setViewerTex
                                                     {quizee.caption}
                                                 </Typography>
                                                 <Typography variant="body2" color="textSecondary" component="p" noWrap>
-                                                    Questions count: {quizee.questionsCount}
+                                                    {''.concat(dictionary.quizeeCard.QUESTIONS_COUNT, quizee.questionsCount)}
                                                 </Typography>
                                             </CardContent>
                                             <CardActions>
                                                 <Button size='small'
-                                                        onClick={() => clickHandler(quizee.id, quizee.caption)}>Test
-                                                    my
-                                                    brains!</Button>
+                                                    onClick={() => clickHandler(quizee.id, quizee.caption)}>
+                                                    {dictionary.quizeeCard.START_TEST}
+                                                </Button>
                                             </CardActions>
                                         </Card>
                                     </Grid>
-
                                 ))
                         }
                     </Grid>
@@ -156,7 +155,7 @@ const HomeScreen = ({state, fetchQuizees, showQuizees, setQuizeeID, setViewerTex
             </Box>
             <div className={classes.stickyFab}>
                 <Fab color="primary" aria-label="add" onClick={() => history.push('/Creator')}>
-                    <EditIcon/>
+                    <EditIcon />
                 </Fab>
             </div>
         </Grid>
@@ -164,7 +163,7 @@ const HomeScreen = ({state, fetchQuizees, showQuizees, setQuizeeID, setViewerTex
 }
 
 function HideOnScroll(props) {
-    const {children} = props
+    const { children } = props
     const trigger = useScrollTrigger()
 
     return (
@@ -176,6 +175,7 @@ function HideOnScroll(props) {
 
 const mapStateToProps = state => ({
     state: state.Home,
+    dictionary: state.Global.dictionary.Home
 })
 
 const mapDispatchToProps = {

@@ -76,6 +76,7 @@ exports.checkAnswers = functions.https.onRequest(async ({ query }, res) => {
         handler = checkCases[typeof value.answer]
       }
       result += factor * handler(value, userAnswers[index])
+      result = parseFloat(result.toFixed(1))
       console.log(result)
     })
     res.json({ ok: true, message: result })

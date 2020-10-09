@@ -41,7 +41,7 @@ const handlers = {
     DEFAULT: state => state,
 }
 
-export const CreatorReducer = (state = initialState, action) => {
+export default (state = initialState, action) => {
     const handle = handlers[action.type] || handlers.DEFAULT
     return handle(state, action)
 }
