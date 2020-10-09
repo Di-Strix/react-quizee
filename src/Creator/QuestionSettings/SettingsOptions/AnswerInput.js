@@ -6,7 +6,7 @@ import {
     TextField,
     ListItemIcon,
     Checkbox,
-    debounce, makeStyles
+    debounce
 } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { updateAnswers } from 'redux/Creator/actions'
@@ -15,21 +15,8 @@ import SettingsCard from '../Components/SettingsCard'
 
 const configKeys = ['equalCase']
 
-const useStyles = makeStyles(theme => ({
-    marginBottom: {
-        marginBottom: theme.spacing(2),
-    },
-    section: {
-        padding: theme.spacing(1.6),
-    },
-    marginLeft: {
-        marginLeft: theme.spacing(1),
-    },
-}))
-
 const AnswerInput = ({ updateAnswers, state, answer, dictionary }) => {
     const [inputValue, setInputValue] = useState(answer.answer)
-    const classes = useStyles()
 
     const dispatchToStore = useCallback(debounce(value => {
         const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))

@@ -87,7 +87,7 @@ const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerTe
                     startFetchingQuizees()
                 }, 3000)
             })
-    }, [fetchQuizees, showQuizees, enqueueSnackbar, closeSnackbar])
+    }, [fetchQuizees, showQuizees, enqueueSnackbar, closeSnackbar, dictionary])
 
     useEffect(() => {
         startFetchingQuizees()

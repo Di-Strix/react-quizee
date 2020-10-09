@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { ANSWER_OPTIONS } from 'Creator/types'
 import { connect } from 'react-redux'
 import * as TYPES from 'redux/questionTypes'
 import {
