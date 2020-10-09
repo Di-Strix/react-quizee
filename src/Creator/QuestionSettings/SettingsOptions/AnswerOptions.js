@@ -20,7 +20,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { checkAnswerOption, checkQuestion } from 'Creator/helperFunctions'
 import SettingsCard from '../Components/SettingsCard'
 
-const AnswerOptions = ({ state, question, updateQuestion, updateAnswers }) => {
+const AnswerOptions = ({ state, question, updateQuestion, updateAnswers, dictionary }) => {
     const [answerOptions, setAnswerOptions] = useState(question.answerOptions)
 
     useEffect(() => setAnswerOptions(question.answerOptions), [question])
@@ -82,7 +82,7 @@ const AnswerOptions = ({ state, question, updateQuestion, updateAnswers }) => {
         updateAnswers(stateAnswersCopy)
     }
 
-    const checkBoxHandler = (id) => {
+    const checkBoxHandler = id => {
         const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
         if (stateAnswersCopy[state.selected].answer.includes(id)) {
             stateAnswersCopy[state.selected].answer = stateAnswersCopy[state.selected].answer.filter(val => val !== id)
@@ -94,20 +94,20 @@ const AnswerOptions = ({ state, question, updateQuestion, updateAnswers }) => {
 
     let ListAction
     if (question.type === TYPES.ONE_TRUE) {
-        ListAction = id => (<Radio
+        ListAction = id => <Radio
             checked={state.answers[state.selected].answer === id}
             onChange={() => radioHandler(id)}
-        />)
+        />
     } else {
-        ListAction = id => (<Checkbox
+        ListAction = id => <Checkbox
             checked={state.answers[state.selected].answer.includes(id)}
             onChange={() => checkBoxHandler(id)}
-        />)
+        />
     }
 
     return (
         <SettingsCard
-            heading={'Answer options'}
+            heading={dictionary.SECTION_HEADING}
             showError={!answersCheck.ok}
             errorMessage={answersCheck.message}
             AdditionalAction={<IconButton onClick={addHandler}><AddIcon /></IconButton>}
@@ -143,6 +143,7 @@ const AnswerOptions = ({ state, question, updateQuestion, updateAnswers }) => {
 const mapStateToProps = state => ({
     question: state.Creator.questions[state.Creator.selected],
     state: state.Creator,
+    dictionary: state.Global.dictionary.Creator.sections.QuestionSettings.questionTypes[state.Creator.questions[state.Creator.selected].type],
 })
 const mapDispatchToProps = {
     updateQuestion,

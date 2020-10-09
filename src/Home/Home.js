@@ -78,8 +78,7 @@ const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerTe
                 console.log(list)
             })
             .catch(err => {
-                // console.log(err)
-                const snackbarKey = enqueueSnackbar('Fetching error. 3 seconds timeout', {
+                const snackbarKey = enqueueSnackbar(dictionary.errors.FETCH_ERROR, {
                     variant: 'error',
                     persist: true,
                 })

@@ -5,7 +5,7 @@ import * as TYPES from 'redux/questionTypes'
 import { updateQuestion, updateAnswers } from 'redux/Creator/actions'
 import SettingsCard from '../Components/SettingsCard'
 
-const QuestionType = ({ updateQuestion, updateAnswers, state, question }) => {
+const QuestionType = ({ updateQuestion, updateAnswers, state, question, dictionary }) => {
 
     const typeChangeHandler = ({ target }) => {
         const questionCopy = JSON.parse(JSON.stringify(question))
@@ -23,11 +23,11 @@ const QuestionType = ({ updateQuestion, updateAnswers, state, question }) => {
 
 
     return (
-        <SettingsCard heading={'Question type'}>
+        <SettingsCard heading={dictionary.QUESTION_TYPE}>
             <Select value={question.type} onChange={typeChangeHandler} style={{ width: '100%' }}>
-                <MenuItem value={TYPES.ONE_TRUE}>One true</MenuItem>
-                <MenuItem value={TYPES.SEVERAL_TRUE}>Several true</MenuItem>
-                <MenuItem value={TYPES.WRITE_ANSWER}>Write answer</MenuItem>
+                <MenuItem value={TYPES.ONE_TRUE}>{dictionary.questionTypes[TYPES.ONE_TRUE].TYPE_NAME}</MenuItem>
+                <MenuItem value={TYPES.SEVERAL_TRUE}>{dictionary.questionTypes[TYPES.SEVERAL_TRUE].TYPE_NAME}</MenuItem>
+                <MenuItem value={TYPES.WRITE_ANSWER}>{dictionary.questionTypes[TYPES.WRITE_ANSWER].TYPE_NAME}</MenuItem>
             </Select>
         </SettingsCard>
 
@@ -36,7 +36,8 @@ const QuestionType = ({ updateQuestion, updateAnswers, state, question }) => {
 
 const mapStateToProps = state => ({
     question: state.Creator.questions[state.Creator.selected],
-    state: state.Creator
+    state: state.Creator,
+    dictionary: state.Global.dictionary.Creator.sections.QuestionSettings
 })
 const mapDispatchToProps = {
     updateQuestion,

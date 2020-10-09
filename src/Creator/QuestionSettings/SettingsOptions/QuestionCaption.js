@@ -4,7 +4,7 @@ import { TextField, debounce } from '@material-ui/core'
 import { updateQuestion } from 'redux/Creator/actions'
 import SettingsCard from '../Components/SettingsCard'
 
-const QuestionCaption = ({ question, updateQuestion }) => {
+const QuestionCaption = ({ question, updateQuestion, dictionary }) => {
 
     const [caption, setCaption] = useState(question.caption)
 
@@ -23,7 +23,7 @@ const QuestionCaption = ({ question, updateQuestion }) => {
     }
 
     return (
-        <SettingsCard heading={'Question caption'}>
+        <SettingsCard heading={dictionary.QUESTION_CAPTION}>
             <TextField fullWidth
                 multiline
                 value={caption}
@@ -36,6 +36,7 @@ const QuestionCaption = ({ question, updateQuestion }) => {
 
 const mapStateToProps = state => ({
     question: state.Creator.questions[state.Creator.selected],
+    dictionary: state.Global.dictionary.Creator.sections.QuestionSettings
 })
 
 const mapDispatchToStore = {

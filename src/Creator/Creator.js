@@ -51,9 +51,9 @@ const defaultSnackSettings = {
     preventDuplicate: true,
 }
 
-const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updateAnswers}) => {
+const Creator = ({ state, createQuestion, setSelected, updateQuestionsList, updateAnswers, dictionary }) => {
     const classes = useStyles()
-    const {enqueueSnackbar} = useSnackbar()
+    const { enqueueSnackbar } = useSnackbar()
     const [published, setPublished] = useState(false)
     const history = useHistory()
 
@@ -115,9 +115,9 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
                 questions: state.questions,
             },
         }
-        throwSuccMessage('All checks passed, publishing...', dataToPublish)
+        throwSuccMessage(dictionary.ALL_CHECKS_PASSED_PUBLISHING, dataToPublish)
         axios.post(process.env.REACT_APP_QUIZEE_DB_URL + 'quizees.json', dataToPublish).then(res => {
-            if (res.data.name) throwSuccMessage('Published successfully!')
+            if (res.data.name) throwSuccMessage(dictionary.PUBLISHED_SUCCESSFULLY)
             else setPublished(false)
             console.log(res)
         })
@@ -127,7 +127,7 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
     return (
         <Grid
             container
-            style={{width: '100vw', height: '100vh', flexWrap: 'nowrap'}}
+            style={{ width: '100vw', height: '100vh', flexWrap: 'nowrap' }}
             direction='column'
         >
             <AppBar position='static'>
@@ -136,20 +136,20 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
                         edge='start'
                         color='inherit'
                         className={classes.homeButton}
-                        onClick={() => {history.push('/')}}
+                        onClick={() => { history.push('/') }}
                     >
-                        <HomeIcon/>
+                        <HomeIcon />
                     </IconButton>
                     <Typography variant='h5'>Creator</Typography>
-                    <div style={{flexGrow: 1}}/>
+                    <div style={{ flexGrow: 1 }} />
                     <Button
                         disabled={published}
                         onClick={publishHandler}
                         variant='outlined'
                         color='inherit'
-                        endIcon={<PublishIcon/>}
+                        endIcon={<PublishIcon />}
                     >
-                        Publish
+                        {dictionary.PUBLISH_QUIZEE}
                     </Button>
                 </Toolbar>
             </AppBar>
@@ -166,9 +166,9 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
                     justify='center'
                     className={classes.noWrap}
                 >
-                    <QuestionsOverview onAdd={questionCreateHandler} onRemove={questionRemoveHandler}/>
+                    <QuestionsOverview onAdd={questionCreateHandler} onRemove={questionRemoveHandler} />
                 </Grid>
-                <Divider orientation='vertical' flexItem light/>
+                <Divider orientation='vertical' flexItem light />
                 <Grid
                     container
                     item
@@ -178,22 +178,22 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
                 >
                     {
                         state.questions.length > 0
-                            ? <Viewer ConstructorMode question={state.questions[state.selected]}/>
+                            ? <Viewer ConstructorMode question={state.questions[state.selected]} />
                             : <Button className={classes.noTextTransform} color='primary' variant='contained'>
                                 <Typography component='h1' variant='h5' onClick={questionCreateHandler}>
-                                    Create first question
+                                    {dictionary.CREATE_FIRST_QUESTION}
                                 </Typography>
                             </Button>
                     }
                 </Grid>
-                <Divider orientation='vertical' flexItem light/>
+                <Divider orientation='vertical' flexItem light />
                 <Grid
                     item
                     xs={3}
                 >
                     {
                         state.selected >= 0
-                            ? <QuestionSettings/>
+                            ? <QuestionSettings />
                             :
                             <Grid container justify='center' alignContent='center' className={classes.takeAllSpace}>
                                 <Typography
@@ -201,11 +201,10 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
                                     variant='h6'
                                     color='textSecondary'
                                 >
-                                    Question settings
+                                    {dictionary.sections.QuestionSettings.PLACEHOLDER}
                                 </Typography>
                             </Grid>
                     }
-
                 </Grid>
             </Grid>
         </Grid>
@@ -215,6 +214,7 @@ const Creator = ({state, createQuestion, setSelected, updateQuestionsList, updat
 
 const mapStateToProps = state => ({
     state: state.Creator,
+    dictionary: state.Global.dictionary.Creator
 })
 const mapDispatchToProps = {
     createQuestion,

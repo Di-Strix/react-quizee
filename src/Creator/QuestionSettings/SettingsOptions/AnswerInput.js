@@ -1,20 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
-    Grid,
     List,
     ListItem,
     ListItemText,
-    Paper,
     TextField,
-    Typography,
     ListItemIcon,
     Checkbox,
-    Tooltip,
     debounce, makeStyles
 } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { updateAnswers } from 'redux/Creator/actions'
-import ErrorIcon from '@material-ui/icons/Error'
 import { checkAnswerOption } from 'Creator/helperFunctions'
 import SettingsCard from '../Components/SettingsCard'
 
@@ -32,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const AnswerInput = ({ updateAnswers, state, answer }) => {
+const AnswerInput = ({ updateAnswers, state, answer, dictionary }) => {
     const [inputValue, setInputValue] = useState(answer.answer)
     const classes = useStyles()
 
@@ -56,7 +51,7 @@ const AnswerInput = ({ updateAnswers, state, answer }) => {
     }
     return (
         <SettingsCard
-            heading={'Answer'}
+            heading={dictionary.SECTION_HEADING}
             showError={!answersCheck.ok}
             errorMessage={answersCheck.message}
         >
@@ -90,6 +85,7 @@ const mapStateToProps = state => ({
     state: state.Creator,
     answer: state.Creator.answers[state.Creator.selected],
     question: state.Creator.questions[state.Creator.selected],
+    dictionary: state.Global.dictionary.Creator.sections.QuestionSettings.questionTypes[state.Creator.questions[state.Creator.selected].type],
 })
 const mapDispatchToProps = {
     updateAnswers,

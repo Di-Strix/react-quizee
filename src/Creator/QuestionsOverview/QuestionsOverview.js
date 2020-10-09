@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const QuestionsOverview = ({ state, onAdd = () => { }, onRemove = () => { }, updateQuizeeCaption }) => {
+const QuestionsOverview = ({ state, onAdd = () => { }, onRemove = () => { }, updateQuizeeCaption, dictionary }) => {
     const classes = useStyles()
     const [caption, setCaption] = useState(() => state.caption)
 
@@ -58,7 +58,7 @@ const QuestionsOverview = ({ state, onAdd = () => { }, onRemove = () => { }, upd
                     onChange={e => setCaptionWithDispatch(e.target.value)}
                     fullWidth
                     error={state.caption.length <= 0}
-                    label='Quizee caption' />
+                    label={dictionary.QUIZEE_CAPTION} />
             </Grid>
             <Grid
                 item
@@ -99,6 +99,7 @@ const QuestionsOverview = ({ state, onAdd = () => { }, onRemove = () => { }, upd
 
 const mapStateToProps = state => ({
     state: state.Creator,
+    dictionary: state.Global.dictionary.Creator.sections.QuestionsOverview
 })
 const mapDispatchToProps = {
     updateQuizeeCaption,
