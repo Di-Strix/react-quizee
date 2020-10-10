@@ -1,6 +1,9 @@
 import React from 'react'
 import { Grid, Typography, Paper, Tooltip, makeStyles } from '@material-ui/core'
 import ErrorIcon from '@material-ui/icons/Error'
+import { useErrorsFromQuestion } from 'Creator/Hooks/useErrorsFromQuestion'
+import { getErrorString } from 'helperFunctions'
+import { connect } from 'react-redux'
 
 const useStyles = makeStyles(theme => ({
     marginBottom: {
@@ -17,8 +20,11 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default ({ heading, children, showError, errorMessage, AdditionalAction }) => {
+const SettignsCard = ({ children, heading = '', AdditionalAction, acceptableErrors = [], errorsDictionary }) => {
     const classes = useStyles()
+    const currentQuestionErrors = useErrorsFromQuestion(acceptableErrors)
+    const showError = currentQuestionErrors.length > 0
+    const errorMessage = showError ? getErrorString(currentQuestionErrors[0], errorsDictionary) : ''
 
     return (
         <Grid className={classes.marginBottom}>
@@ -41,3 +47,9 @@ export default ({ heading, children, showError, errorMessage, AdditionalAction }
         </Grid >
     )
 }
+
+const mapStateToProps = state => ({
+    errorsDictionary: state.Global.dictionary.Creator.errors
+})
+
+export default connect(mapStateToProps)(SettignsCard)

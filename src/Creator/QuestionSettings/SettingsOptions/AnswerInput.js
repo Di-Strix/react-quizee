@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
     List,
     ListItem,
@@ -9,38 +9,43 @@ import {
     debounce
 } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { updateAnswers } from 'redux/Creator/actions'
-import { checkAnswerOption } from 'Creator/helperFunctions'
+import { updateQuestion } from 'redux/Creator/actions'
+import { checkAnswerOption } from 'Creator/verificationFunctions'
 import SettingsCard from '../Components/SettingsCard'
+import VerificationContext from 'Creator/Context/VerificationContext'
+import * as ERR_TYPES from 'Creator/errorTypes'
 
 const configKeys = ['equalCase']
+const acceptableErrors = [
+    ERR_TYPES.ERR_QUESTION_ANSWER_EMPTY
+]
 
-const AnswerInput = ({ updateAnswers, state, answer, dictionary }) => {
-    const [inputValue, setInputValue] = useState(answer.answer)
+const AnswerInput = ({ updateQuestion, question, state, dictionary }) => {
+    const [inputValue, setInputValue] = useState(question.answer)
+
+    useEffect(() => setInputValue(question.answer), [question.answer])
 
     const dispatchToStore = useCallback(debounce(value => {
-        const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
-        stateAnswersCopy[state.selected].answer = value
-        updateAnswers(stateAnswersCopy)
-    }, 300), [state, updateAnswers])
-
-    const answersCheck = checkAnswerOption(state.answers[state.selected])
+        const questionCopy = JSON.parse(JSON.stringify(question))
+        questionCopy.answer = value
+        updateQuestion(questionCopy)
+    }, 300), [state, updateQuestion])
 
     const answerChangeHandler = value => {
-        setInputValue(value)
-        dispatchToStore(value)
+        setInputValue(value.trimStart())
+        dispatchToStore(value.trimStart())
     }
 
     const configChangeHandler = key => {
-        const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
-        stateAnswersCopy[state.selected].config[key] = !stateAnswersCopy[state.selected].config[key]
-        updateAnswers(stateAnswersCopy)
+        const questionCopy = JSON.parse(JSON.stringify(question))
+        questionCopy.config[key] = !questionCopy.config[key]
+        updateQuestion(questionCopy)
     }
+
     return (
         <SettingsCard
             heading={dictionary.SECTION_HEADING}
-            showError={!answersCheck.ok}
-            errorMessage={answersCheck.message}
+            acceptableErrors={acceptableErrors}
         >
             <TextField
                 fullWidth
@@ -48,7 +53,7 @@ const AnswerInput = ({ updateAnswers, state, answer, dictionary }) => {
                 error={!Boolean(inputValue && inputValue.length >= 0)}
                 onChange={e => answerChangeHandler(e.target.value)}
             />
-            <List style={{paddingBottom: 0}}>
+            <List style={{ paddingBottom: 0 }}>
                 {
                     configKeys.map(key => (
                         <ListItem key={key}>
@@ -56,7 +61,7 @@ const AnswerInput = ({ updateAnswers, state, answer, dictionary }) => {
                                 <Checkbox
                                     edge='start'
                                     onChange={() => configChangeHandler(key)}
-                                    checked={state.answers[state.selected].config[key] || false}
+                                    checked={question.config[key] || false}
                                 />
                             </ListItemIcon>
                             <ListItemText primary={'Must equal case'} />
@@ -70,12 +75,11 @@ const AnswerInput = ({ updateAnswers, state, answer, dictionary }) => {
 
 const mapStateToProps = state => ({
     state: state.Creator,
-    answer: state.Creator.answers[state.Creator.selected],
     question: state.Creator.questions[state.Creator.selected],
     dictionary: state.Global.dictionary.Creator.sections.QuestionSettings.questionTypes[state.Creator.questions[state.Creator.selected].type],
 })
 const mapDispatchToProps = {
-    updateAnswers,
+    updateQuestion,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AnswerInput)

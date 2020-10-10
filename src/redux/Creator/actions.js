@@ -17,12 +17,6 @@ export const updateQuestion = changes => {
         payload: changes,
     }
 }
-export const updateAnswers = answers => {
-    return {
-        type: TYPES.UPDATE_ANSWERS,
-        payload: answers,
-    }
-}
 export const updateQuizeeCaption = caption => {
     return {
         type: TYPES.UPDATE_QUIZEE_CAPTION,

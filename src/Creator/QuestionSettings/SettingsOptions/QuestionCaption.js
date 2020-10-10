@@ -3,6 +3,11 @@ import { connect } from 'react-redux'
 import { TextField, debounce } from '@material-ui/core'
 import { updateQuestion } from 'redux/Creator/actions'
 import SettingsCard from '../Components/SettingsCard'
+import * as ERR_TYPE from 'Creator/errorTypes'
+
+const acceptableErrors = [
+    ERR_TYPE.ERR_QUESTION_CAPTION_EMPTY
+]
 
 const QuestionCaption = ({ question, updateQuestion, dictionary }) => {
 
@@ -18,12 +23,15 @@ const QuestionCaption = ({ question, updateQuestion, dictionary }) => {
 
 
     const captionChangeHandler = value => {
-        setCaption(value)
-        dispatchToStore(value)
+        setCaption(value.trimStart())
+        dispatchToStore(value.trimStart())
     }
 
     return (
-        <SettingsCard heading={dictionary.QUESTION_CAPTION}>
+        <SettingsCard
+            heading={dictionary.QUESTION_CAPTION}
+            acceptableErrors={acceptableErrors}
+        >
             <TextField fullWidth
                 multiline
                 value={caption}

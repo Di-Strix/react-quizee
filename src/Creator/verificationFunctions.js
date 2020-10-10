@@ -25,7 +25,7 @@ const questionTypeVerificator = {
         if (!Array.isArray(question.answer)) errors.push(generateError(ERR_TYPES.ERR_QUESTION_ANSWER_INVALID_TYPE))
         else if (question.answer.length < 1) errors.push(generateError(ERR_TYPES.ERR_QUESTION_NO_ANSWER))
         else question.answer.forEach((answer, index) => {
-            if (!answer) errors.push(generateError(ERR_TYPES.ERR_QUESTION_ANSWER_CHILD_INVALID, index))
+            if (!answer) errors.push(generateError(ERR_TYPES.ERR_QUESTION_ANSWER_CHILD_INVALID_ID, index))
         })
 
         return errors

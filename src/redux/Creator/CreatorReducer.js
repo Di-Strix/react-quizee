@@ -3,7 +3,6 @@ import * as QUESTION_TYPES from 'redux/questionTypes'
 
 const initialState = {
     questions: [],
-    answers: [],
     caption: 'New Quizee',
     selected: -1,
 }
@@ -12,11 +11,8 @@ const questionInitialState = {
     type: QUESTION_TYPES.ONE_TRUE,
     caption: 'Question caption',
     answerOptions: [{id: new Date().getTime(), val: 'Answer'}],
-}
-
-const answerInitialState = {
     answer: null,
-    config: {},
+    config: {}
 }
 
 const handlers = {
@@ -24,7 +20,6 @@ const handlers = {
         ...state,
         questions: [...state.questions, JSON.parse(JSON.stringify(questionInitialState))],
         selected: state.questions.length,
-        answers: [...state.answers, JSON.parse(JSON.stringify(answerInitialState))],
     }),
     [TYPES.UPDATE_QUESTIONS_LIST]: (state, {payload}) => ({...state, questions: [...payload]}),
     [TYPES.SET_SELECTED]: (state, {payload}) => ({...state, selected: payload}),
@@ -36,7 +31,6 @@ const handlers = {
             questions,
         }
     },
-    [TYPES.UPDATE_ANSWERS]: (state, {payload}) => ({...state, answers: payload}),
     [TYPES.UPDATE_QUIZEE_CAPTION]: (state, {payload}) => ({...state, caption: payload}),
     DEFAULT: state => state,
 }

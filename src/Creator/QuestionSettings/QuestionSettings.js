@@ -4,7 +4,6 @@ import { Grid } from '@material-ui/core'
 import * as TYPES from 'redux/questionTypes'
 import { QUESTION_CAPTION, QUESTION_TYPE, ANSWER_OPTIONS, ANSWER_INPUT } from '../types'
 import { makeStyles } from '@material-ui/core/styles'
-import { updateQuestion, updateAnswers } from 'redux/Creator/actions'
 import SettingsOptions from './SettingsOptions'
 
 const CONFIG = {
@@ -47,9 +46,5 @@ const mapStateToProps = state => ({
     question: state.Creator.questions[state.Creator.selected],
     state: state.Creator
 })
-const mapDispatchToProps = {
-    updateQuestion,
-    updateAnswers
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(QuestionSettings)
+export default connect(mapStateToProps)(QuestionSettings)

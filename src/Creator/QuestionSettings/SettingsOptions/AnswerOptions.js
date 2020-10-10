@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import * as TYPES from 'redux/questionTypes'
 import {
@@ -14,17 +14,24 @@ import {
     debounce
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
-import { updateQuestion, updateAnswers } from 'redux/Creator/actions'
+import { updateQuestion } from 'redux/Creator/actions'
 import DeleteIcon from '@material-ui/icons/Delete'
-import { checkAnswerOption, checkQuestion } from 'Creator/helperFunctions'
 import SettingsCard from '../Components/SettingsCard'
+import * as ERR_TYPES from 'Creator/errorTypes'
 
-const AnswerOptions = ({ state, question, updateQuestion, updateAnswers, dictionary }) => {
+const acceptableErrors = [
+    ERR_TYPES.ERR_QUESTION_ANSWER_OPTION_INVALID_ID,
+    ERR_TYPES.ERR_QUESTION_ANSWER_OPTION_EMPTY,
+    ERR_TYPES.ERR_QUESTION_NO_ANSWER,
+    ERR_TYPES.ERR_QUESTION_ANSWER_CHILD_INVALID_ID
+]
+
+const AnswerOptions = ({ question, updateQuestion, dictionary, errorsDictionary }) => {
     const [answerOptions, setAnswerOptions] = useState(question.answerOptions)
 
     useEffect(() => setAnswerOptions(question.answerOptions), [question])
 
-    const generateNewAnswerList = useCallback((id, newCaption) => {
+    const generateNewQuestionObject = useCallback((id, newCaption) => {
         const questionCopy = JSON.parse(JSON.stringify(question))
         const index = questionCopy.answerOptions.findIndex(value => value.id === id)
         if (index < 0) return
@@ -32,40 +39,32 @@ const AnswerOptions = ({ state, question, updateQuestion, updateAnswers, diction
         return questionCopy
     }, [question])
 
-    const dispatchToStore = useCallback(debounce((id, newCaption) => {
-        updateQuestion(generateNewAnswerList(id, newCaption))
-    }, 300), [updateQuestion, generateNewAnswerList])
-
-
-    const answersCheck = useMemo(() => {
-        let res = checkAnswerOption(state.answers[state.selected])
-        if (res.ok) {
-            res = checkQuestion(state.questions[state.selected])
-        }
-        return res
-    }, [state])
+    const dispatchToStore = useCallback(debounce(newQuestion => {
+        updateQuestion(newQuestion)
+    }, 300), [updateQuestion])
 
     const answerOptionChangeHandler = useCallback((id, newCaption) => {
-        setAnswerOptions(generateNewAnswerList(id, newCaption).answerOptions)
-        dispatchToStore(id, newCaption)
-    }, [setAnswerOptions, dispatchToStore, generateNewAnswerList])
+        const newQuestion = generateNewQuestionObject(id, newCaption.trimStart())
+        setAnswerOptions(newQuestion.answerOptions)
+        dispatchToStore(newQuestion)
+    }, [setAnswerOptions, dispatchToStore, generateNewQuestionObject])
 
     const deleteHandler = (id) => {
         if (question.answerOptions.length <= 1) return
+
         const questionCopy = JSON.parse(JSON.stringify(question))
+
         questionCopy.answerOptions = questionCopy.answerOptions.filter(answer => answer.id !== id)
+
+        if (question.type === TYPES.SEVERAL_TRUE) {
+            questionCopy.answer = questionCopy.answer.filter(val => val !== id)
+        } else if (question.answer === id) {
+            questionCopy.answer = null
+            questionCopy.config = {}
+        }
+
         updateQuestion(questionCopy)
         setAnswerOptions(questionCopy.answerOptions)
-
-        const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
-        if (question.type === TYPES.SEVERAL_TRUE) {
-            if (stateAnswersCopy[state.selected].answer.includes(id)) {
-                stateAnswersCopy[state.selected].answer = stateAnswersCopy[state.selected].answer.filter(val => val !== id)
-            }
-        } else if (stateAnswersCopy[state.selected] === id) {
-            stateAnswersCopy[state.selected] = { answer: null, config: {} }
-        }
-        updateAnswers(stateAnswersCopy)
     }
 
     const addHandler = () => {
@@ -76,30 +75,30 @@ const AnswerOptions = ({ state, question, updateQuestion, updateAnswers, diction
     }
 
     const radioHandler = id => {
-        const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
-        stateAnswersCopy[state.selected].answer = id
-        updateAnswers(stateAnswersCopy)
+        const questionCopy = JSON.parse(JSON.stringify(question))
+        questionCopy.answer = id
+        updateQuestion(questionCopy)
     }
 
     const checkBoxHandler = id => {
-        const stateAnswersCopy = JSON.parse(JSON.stringify(state.answers))
-        if (stateAnswersCopy[state.selected].answer.includes(id)) {
-            stateAnswersCopy[state.selected].answer = stateAnswersCopy[state.selected].answer.filter(val => val !== id)
+        const questionCopy = JSON.parse(JSON.stringify(question))
+        if (questionCopy.answer.includes(id)) {
+            questionCopy.answer = questionCopy.answer.filter(val => val !== id)
         } else {
-            stateAnswersCopy[state.selected].answer.push(id)
+            questionCopy.answer.push(id)
         }
-        updateAnswers(stateAnswersCopy)
+        updateQuestion(questionCopy)
     }
 
     let ListAction
     if (question.type === TYPES.ONE_TRUE) {
         ListAction = id => <Radio
-            checked={state.answers[state.selected].answer === id}
+            checked={question.answer === id}
             onChange={() => radioHandler(id)}
         />
     } else {
         ListAction = id => <Checkbox
-            checked={state.answers[state.selected].answer.includes(id)}
+            checked={question.answer.includes(id)}
             onChange={() => checkBoxHandler(id)}
         />
     }
@@ -107,8 +106,7 @@ const AnswerOptions = ({ state, question, updateQuestion, updateAnswers, diction
     return (
         <SettingsCard
             heading={dictionary.SECTION_HEADING}
-            showError={!answersCheck.ok}
-            errorMessage={answersCheck.message}
+            acceptableErrors={acceptableErrors}
             AdditionalAction={<IconButton onClick={addHandler}><AddIcon /></IconButton>}
         >
             <List>{
@@ -146,7 +144,6 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = {
     updateQuestion,
-    updateAnswers,
 }
 
 
