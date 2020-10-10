@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { AppBar, Toolbar, Button, makeStyles, Container, Grid } from '@material-ui/core'
 import ArrowIcon from '@material-ui/icons/ArrowForwardIos'
 import { connect } from 'react-redux'
-import FooterObserver from 'Viewer/FooterObserver/FooterObserver'
-// import './Footer.scss'
+import FooterContext from 'Viewer/Context/Footer/FooterContext'
 
 const useStyles = makeStyles(theme => ({
     footer: {
@@ -19,6 +18,7 @@ const useStyles = makeStyles(theme => ({
 
 function Footer({ active = false, btnRef }) {
     const classes = useStyles()
+    const { emit } = useContext(FooterContext)
 
     return (
         <React.Fragment>
@@ -32,7 +32,7 @@ function Footer({ active = false, btnRef }) {
                                 size='large'
                                 variant='outlined'
                                 endIcon={<ArrowIcon />}
-                                onClick={(event) => FooterObserver.emit(event)}
+                                onClick={emit}
                                 disabled={!active}
                                 ref={btnRef}
                             >

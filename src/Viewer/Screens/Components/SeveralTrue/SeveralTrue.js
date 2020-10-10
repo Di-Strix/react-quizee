@@ -1,92 +1,77 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useContext, createContext } from 'react'
 import AnswerHandlerContext from '../../../Context/AnswerHandlerContext'
-// import './SeveralTrue.scss'
-import { Grid, makeStyles } from '@material-ui/core'
+import { Grid, withStyles } from '@material-ui/core'
 import ButtonGrid from '../Layout/ButtonGrid/ButtonGrid'
 import Caption from '../Layout/Caption/Caption'
 import { connect } from 'react-redux'
 import { setFooterButtonState } from 'redux/Viewer/actions'
-import FooterObserver from 'Viewer/FooterObserver/FooterObserver'
-import useFooterObserver from 'Viewer/FooterObserver/useFooterObserver'
+import FooterContext from 'Viewer/Context/Footer/FooterContext'
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        height: '100%',
-    },
-}))
+const MultipleContext = createContext()
 
-const SeveralTrue = ({caption, answerOptions, requiredAnswerCount = 1, footerActive, setFooterButtonState}) => {
-    const answerHandler = React.useContext(AnswerHandlerContext)
-    const [selected, setSelected] = useFooterObserver({})
-    const classes = useStyles()
+class SeveralTrue extends React.Component {
+    constructor(...props) {
+        super(...props)
+        this.requiredAnswerCount = this.props.requiredAnswerCount || 1
+        this.submitHandler = this.submitHandler.bind(this)
+        this.clickHandler = this.clickHandler.bind(this)
+        this.state = {}
+    }
 
-    function processAnswerCount(obj = {}) {
+    processAnswerCount(obj = {}) {
         const checked = Object.keys(obj).reduce((acc, val) => acc + val, 0)
-        if (checked >= requiredAnswerCount) {
-            if (!footerActive) setFooterButtonState(true)
-        } else if (footerActive) setFooterButtonState(false)
+        if (checked >= this.requiredAnswerCount) {
+            if (!this.props.footerActive) this.props.setFooterButtonState(true)
+        } else if (this.props.footerActive) this.props.setFooterButtonState(false)
     }
 
-    function clickHandler(id) {
-        const sel = {...selected}
+    clickHandler(id) {
+        const sel = { ...this.state }
         sel[id] = !sel[id]
-        setSelected(sel)
-        processAnswerCount(sel)
+        this.setState(sel)
+        this.processAnswerCount(sel)
     }
 
-    const submitHandler = useCallback((_, data) => {
-            if (data.length <= requiredAnswerCount) return
-            const answer = []
-            Object.keys(data).forEach(key => data[key] ? answer.push(+key) : null)
-            answerHandler(answer)
-        }, [answerHandler, requiredAnswerCount],
-    )
+    submitHandler() {
+        if (this.state.length <= this.requiredAnswerCount) return
+        const answer = []
+        Object.keys(this.state).forEach(key => this.state[key] ? answer.push(+key) : null)
 
+        const { answerHandler } = this.context
+        answerHandler(answer)
+    }
 
-    useEffect(() => {
-        setFooterButtonState(false)
-    }, [setFooterButtonState])
+    componentDidMount() {
+        this.props.setFooterButtonState(false)
 
-    useEffect(() => {
-        FooterObserver.subscribe(submitHandler)
-        return () => FooterObserver.unSubscribe(submitHandler)
-        // eslint-disable-next-line
-    }, [])
+        const { subscribe } = this.context.Footer
+        subscribe(this.submitHandler)
+    }
 
-    return (
-        <Grid
-            container
-            className={classes.root}
-            direction='column'
-        >
-            <Caption>{caption}</Caption>
-            <ButtonGrid
-                toggle
-                answerOptions={answerOptions}
-                checked={selected}
-                handler={clickHandler}
-                selected={selected}
-            />
-        </Grid>
-        //     <h1 className={classPrefix + '__question'}>{caption}</h1>
-        //     <div className={classPrefix + '__buttons'}>
-        //         {
-        //             answerOptions.map((text, index) => (
-        //                 <button
-        //                     onClick={clickHandler.bind(null, index)}
-        //                     key={index}
-        //                     className={selected[index] ? 'selected' : ''}
-        //                 >
-        //                     <input type='checkbox' checked={selected[index] ? true : false} readOnly={true} />
-        //                     <span>{text}</span>
-        //                 </button>
-        //             ))
-        //         }
-        //     </div>
-        //     <Footer btnRef={nextBtnRef} clickHandler={submitHandler} />
-        // </div>
-    )
+    componentWillUnmount() {
+        const { unSubscribe } = this.context.Footer
+        unSubscribe(this.submitHandler)
+    }
+
+    render() {
+        return (
+            <Grid
+                container
+                className={this.props.classes.root}
+                direction='column'
+            >
+                <Caption>{this.props.caption}</Caption>
+                <ButtonGrid
+                    toggle
+                    answerOptions={this.props.answerOptions}
+                    handler={this.clickHandler}
+                    selected={this.state}
+                />
+            </Grid>
+        )
+    }
 }
+SeveralTrue.contextType = MultipleContext
 
 const mapStateToProps = state => ({
     footerActive: state.Viewer.Footer.active,
@@ -96,4 +81,28 @@ const mapDispatchToProps = {
     setFooterButtonState,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SeveralTrue)
+const styles = () => ({
+    root: {
+        height: '100%',
+    },
+})
+
+const SeveralTrueConnected = connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SeveralTrue))
+
+const WithContext = props => {
+    const answerHandler = useContext(AnswerHandlerContext)
+    const Footer = useContext(FooterContext)
+
+    return (
+        <MultipleContext.Provider
+            value={{
+                answerHandler,
+                Footer
+            }}
+        >
+            <SeveralTrueConnected {...props} />
+        </MultipleContext.Provider>
+    )
+}
+
+export default WithContext

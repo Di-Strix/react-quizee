@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const AnswerField = ({error = '', changeHandler = () => { }, submitHandler = () => { }, value = '', autoFocus = false}) => {
+const AnswerField = ({ error = '', changeHandler = () => { }, submitHandler = () => { }, value = '', autoFocus = false }) => {
     const classes = useStyles()
     const fieldRef = React.useRef(null)
 
@@ -28,7 +28,7 @@ const AnswerField = ({error = '', changeHandler = () => { }, submitHandler = () 
     return (
         <Grid container className={classes.root}>
             <Container maxWidth='md'>
-                <form onSubmit={submitHandler} noValidate>
+                <form onSubmit={e => e.preventDefault() || submitHandler(e)} noValidate>
                     <TextField
                         error={!!error}
                         helperText={error || 'ok'}

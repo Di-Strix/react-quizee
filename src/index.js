@@ -12,6 +12,7 @@ import Viewer from 'Viewer/Viewer'
 import { SnackbarProvider } from 'notistack'
 import Creator from './Creator/Creator'
 import thunk from 'redux-thunk'
+import FooterContextProvider from 'Viewer/Context/Footer/FooterContextProvider'
 
 const store = createStore(rootReducer, compose(
     applyMiddleware(thunk),
@@ -21,29 +22,31 @@ const store = createStore(rootReducer, compose(
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
-            <ScopedCssBaseline>
-                <SnackbarProvider
-                    maxSnack={3}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                >
-                    <BrowserRouter>
-                        <Switch>
-                            <Route path='/' exact>
-                                <HomeScreen />
-                            </Route>
-                            <Route path='/Viewer'>
-                                <Viewer />
-                            </Route>
-                            <Route path='/Creator'>
-                                <Creator />
-                            </Route>
-                        </Switch>
-                    </BrowserRouter>
-                </SnackbarProvider>
-            </ScopedCssBaseline>
+            <FooterContextProvider>
+                <ScopedCssBaseline>
+                    <SnackbarProvider
+                        maxSnack={3}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                    >
+                        <BrowserRouter>
+                            <Switch>
+                                <Route path='/' exact>
+                                    <HomeScreen />
+                                </Route>
+                                <Route path='/Viewer'>
+                                    <Viewer />
+                                </Route>
+                                <Route path='/Creator'>
+                                    <Creator />
+                                </Route>
+                            </Switch>
+                        </BrowserRouter>
+                    </SnackbarProvider>
+                </ScopedCssBaseline>
+            </FooterContextProvider>
         </Provider>
     </React.StrictMode>,
     document.getElementById('root'),
