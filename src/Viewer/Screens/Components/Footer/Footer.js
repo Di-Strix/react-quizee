@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     offset: theme.mixins.toolbar
 }))
 
-function Footer({ active = false, btnRef }) {
+function Footer({ active = false, btnRef, dictionary }) {
     const classes = useStyles()
     const { emit } = useContext(FooterContext)
 
@@ -36,7 +36,7 @@ function Footer({ active = false, btnRef }) {
                                 disabled={!active}
                                 ref={btnRef}
                             >
-                                Next
+                                {dictionary.NEXT_BTN}
                             </Button>
                         </Grid>
                     </Container>
@@ -49,5 +49,6 @@ function Footer({ active = false, btnRef }) {
 
 const mapStateToProps = state => ({
     active: state.Viewer.Footer.active,
+    dictionary: state.Global.dictionary.Viewer.Footer
 })
 export default connect(mapStateToProps, null)(Footer)

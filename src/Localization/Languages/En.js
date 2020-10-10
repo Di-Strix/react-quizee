@@ -39,5 +39,17 @@ export default {
                 QUIZEE_CAPTION: 'Quizee caption'
             },
         }
+    },
+    Viewer: {
+        PROCESSING_ANSWERS: 'Please wait, we are processing your answers🎉',
+        RESULTS_TEXT: 'Woohoo! You\'ve {DATA}% correct answers!',
+        Footer: {
+            NEXT_BTN: 'Next'
+        },
+        components: {
+            AnswerField: {
+                INPUT_LABEL: 'Write your answer here'
+            }
+        }
     }
 }

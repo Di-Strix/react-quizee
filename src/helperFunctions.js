@@ -1,0 +1,1 @@
+export const placeDataToLocString = (string, data) => string.replace('{DATA}', data)

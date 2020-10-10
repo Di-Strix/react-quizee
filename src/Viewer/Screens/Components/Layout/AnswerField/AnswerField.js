@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { Grid, Container, TextField, makeStyles } from '@material-ui/core'
 import { screenChangeTransitionTime } from 'Viewer/constants'
+import { connect } from 'react-redux'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -12,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const AnswerField = ({ error = '', changeHandler = () => { }, submitHandler = () => { }, value = '', autoFocus = false }) => {
+const AnswerField = ({ error = '', changeHandler = () => { }, submitHandler = () => { }, value = '', autoFocus = false, dictionary }) => {
     const classes = useStyles()
     const fieldRef = React.useRef(null)
 
@@ -31,8 +32,8 @@ const AnswerField = ({ error = '', changeHandler = () => { }, submitHandler = ()
                 <form onSubmit={e => e.preventDefault() || submitHandler(e)} noValidate>
                     <TextField
                         error={!!error}
-                        helperText={error || 'ok'}
-                        label='Write your answer here'
+                        helperText={error || ' '}
+                        label={dictionary.INPUT_LABEL}
                         onChange={changeHandler}
                         value={value}
                         className={classes.input}
@@ -46,4 +47,8 @@ const AnswerField = ({ error = '', changeHandler = () => { }, submitHandler = ()
     )
 }
 
-export default AnswerField
+const mapStateToProps = state => ({
+    dictionary: state.Global.dictionary.Viewer.components.AnswerField
+})
+
+export default connect(mapStateToProps)(AnswerField)

@@ -26,11 +26,12 @@ import { Grid, makeStyles, Toolbar } from '@material-ui/core'
 import { screenChangeTransitionTime as transitionTime, captionShowTime } from 'Viewer/constants'
 import { useHistory } from 'react-router-dom'
 import IsConstructorMode from './Context/IsConstructorModeContext'
+import { placeDataToLocString } from 'helperFunctions'
 
 const useStyles = makeStyles(theme => ({
     constructorViewer: {
-      height: '100%',
-      width: '100%',
+        height: '100%',
+        width: '100%',
     },
     screen: {
         flexGrow: 1,
@@ -105,17 +106,17 @@ const Viewer = (props) => {
         return (lastAnswer) => {
             props.updateTransitionKey()
             props.showCaptionScreen()
-            props.setText('Please wait, we are processing your answers🎉')
+            props.setText(props.dictionary.PROCESSING_ANSWERS)
             props.setLoading(true)
             props.setFooterButtonState(false)
 
             axios.get(process.env.REACT_APP_QUIZEE_API_URL + 'checkAnswers?data='
-                + JSON.stringify({quizeeId: props.state.quizeeId, answers: [...props.state.answers, lastAnswer]}, null, 0))
+                + JSON.stringify({ quizeeId: props.state.quizeeId, answers: [...props.state.answers, lastAnswer] }, null, 0))
                 .then(res => {
                     setTimeout(() => {
                         props.updateTransitionKey()
                         props.setLoading(false)
-                        props.setText(`Woohoo! You've ${res.data.message}% correct answers!`)
+                        props.setText(placeDataToLocString(props.dictionary.RESULTS_TEXT, res.data.message))
                     }, transitionTime)
                 })
                 .catch(err => {
@@ -123,24 +124,32 @@ const Viewer = (props) => {
                 })
         }
         // eslint-disable-next-line
-    }, [props.ConstructorMode, props.updateTransitionKey, props.showCaptionScreen, props.setText, props.setLoading, props.setFooterButtonState, props.throwError, props.state.answers])
+    }, [
+        props.ConstructorMode,
+        props.updateTransitionKey,
+        props.showCaptionScreen,
+        props.setText,
+        props.setLoading,
+        props.setFooterButtonState,
+        props.throwError,
+        props.state.answers
+    ])
 
     const pushAnswer = useMemo(() => {
-            if (props.ConstructorMode) {
-                return () => {
-                }
+        if (props.ConstructorMode) {
+            return () => {
             }
-            return answer => {
-                console.log('Answer received:', answer)
-                props.addAnswer(answer)
-                props.updateTransitionKey()
-                if (props.state.answers.length + 1 === props.state.questions.length) {
-                    checkAnswers(answer)
-                }
+        }
+        return answer => {
+            console.log('Answer received:', answer)
+            props.addAnswer(answer)
+            props.updateTransitionKey()
+            if (props.state.answers.length + 1 === props.state.questions.length) {
+                checkAnswers(answer)
             }
-            // eslint-disable-next-line
-        }, [props.addAnswer, props.updateTransitionKey, props.state.answers, props.state.questions, checkAnswers],
-    )
+        }
+        // eslint-disable-next-line
+    }, [props.addAnswer, props.updateTransitionKey, props.state.answers, props.state.questions, checkAnswers])
 
     let screen = <></>
 
@@ -150,7 +159,7 @@ const Viewer = (props) => {
             break
         case SCREENS.QUEST:
             const question = props.state.questions[props.state.answers.length]
-            screen = <MainScreen question={question}/>
+            screen = <MainScreen question={question} />
             break
         case SCREENS.ERROR:
             screen = <InfoScreen>{props.state.text}</InfoScreen>
@@ -176,40 +185,39 @@ const Viewer = (props) => {
                                 </Grid>
                             </Grid>)
                             : (<React.Fragment>
-                                    <TransitionGroup className='transition'>
-                                        <CSSTransition
-                                            key={props.state.transitionKey}
-                                            timeout={transitionTime}
-                                            classNames='screen-change'
-                                            mountOnEnter
-                                            unmountOnExit
-                                        >
-                                            <Grid container direction='column' className={classes.fullHeight}>
-                                                <Grid item className={classes.grow}>
-                                                    {screen}
-                                                </Grid>
-                                                <Grid item className='fakeFooter'>
-                                                    <Toolbar/>
-                                                </Grid>
+                                <TransitionGroup className='transition'>
+                                    <CSSTransition
+                                        key={props.state.transitionKey}
+                                        timeout={transitionTime}
+                                        classNames='screen-change'
+                                        mountOnEnter
+                                        unmountOnExit
+                                    >
+                                        <Grid container direction='column' className={classes.fullHeight}>
+                                            <Grid item className={classes.grow}>
+                                                {screen}
                                             </Grid>
-                                        </CSSTransition>
-                                    </TransitionGroup>
-                                    <Footer/>
-                                </React.Fragment>
+                                            <Grid item className='fakeFooter'>
+                                                <Toolbar />
+                                            </Grid>
+                                        </Grid>
+                                    </CSSTransition>
+                                </TransitionGroup>
+                                <Footer />
+                            </React.Fragment>
                             )
                     }
-
                 </div>
             </IsConstructorMode.Provider>
         </AnswerHandlerContext.Provider>
     )
 }
 
-const mapStateToProps = state => {
-    return {
-        state: state.Viewer,
-    }
-}
+const mapStateToProps = state => ({
+    state: state.Viewer,
+    dictionary: state.Global.dictionary.Viewer
+})
+
 const mapDispatchToProps = {
     addAnswer,
     throwError,
