@@ -1,9 +1,9 @@
 import * as TYPES from './types'
 
-const initialState = {
+const initialState = () => ({
     loading: false,
     quizeeList: []
-}
+})
 
 const handlers = {
     [TYPES.FETCH_QUIZEES]: state => ({...state, loading: true}),
@@ -11,7 +11,7 @@ const handlers = {
     DEFAULT: state => state
 }
 
-export default function (state = initialState, action) {
+export default function (state = initialState(), action = {}) {
     const handle = handlers[action.type] || handlers.DEFAULT
     return handle(state, action)
 }

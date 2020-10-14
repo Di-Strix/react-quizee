@@ -3,7 +3,7 @@ import * as SCREENS from './screens'
 
 const getKey = () => new Date().getTime().toString()
 
-const initialState = {
+const initialState = () => ({
     quizeeId: '',
     questions: [],
     answers: [],
@@ -15,7 +15,7 @@ const initialState = {
         active: false
     },
     currentScreen: ''
-}
+})
 
 
 const handlers = {
@@ -48,7 +48,7 @@ const handlers = {
             answers: [...state.answers, payload]
         }),
     [TYPES.SET_QUIZEE_ID]:
-        (_, {payload}) => ({...initialState, quizeeId: payload}),
+        (_, {payload}) => ({...initialState(), quizeeId: payload}),
     [TYPES.ERROR]:
         (state, {payload}) => ({...state, screen: SCREENS.ERROR, text: payload}),
     [TYPES.FOOTER_SET_NEXT_BUTTON_STATE]:
@@ -58,7 +58,7 @@ const handlers = {
     DEFAULT: state => state
 }
 
-export default (state = initialState, action = {}) => {
+export default (state = initialState(), action = {}) => {
     const handle = handlers[action.type] || handlers.DEFAULT
     return handle(state, action)
 }
