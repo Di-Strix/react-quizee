@@ -10,9 +10,7 @@ import {
 } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { updateQuestion } from 'redux/Creator/actions'
-import { checkAnswerOption } from 'Creator/verificationFunctions'
 import SettingsCard from '../Components/SettingsCard'
-import VerificationContext from 'Creator/Context/VerificationContext'
 import * as ERR_TYPES from 'Creator/errorTypes'
 
 const configKeys = ['equalCase']

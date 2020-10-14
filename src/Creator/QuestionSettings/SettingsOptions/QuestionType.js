@@ -30,6 +30,7 @@ const QuestionType = ({ updateQuestion, question, dictionary }) => {
     return (
         <SettingsCard
             heading={dictionary.QUESTION_TYPE}
+            acceptableErrors={acceptableErrors}
         >
             <Select value={question.type} onChange={typeChangeHandler} style={{ width: '100%' }}>
                 <MenuItem value={TYPES.ONE_TRUE}>{dictionary.questionTypes[TYPES.ONE_TRUE].TYPE_NAME}</MenuItem>

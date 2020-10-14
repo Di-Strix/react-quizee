@@ -16,6 +16,7 @@ export default {
         PUBLISH_QUIZEE: 'Publish',
         ALL_CHECKS_PASSED_PUBLISHING: 'All checks passed, publishing...',
         PUBLISHED_SUCCESSFULLY: 'Published successfully!',
+        EXIT_CONFIRM: 'You have unsaved data that will be lost if you leave the page.',
         sections: {
             QuestionSettings: {
                 PLACEHOLDER: 'Question settings',
