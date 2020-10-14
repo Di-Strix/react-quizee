@@ -5,7 +5,7 @@ import PublishIcon from '@material-ui/icons/Publish'
 import HomeIcon from '@material-ui/icons/Home'
 import Viewer from '../Viewer/Viewer'
 import QuestionsOverview from './QuestionsOverview/QuestionsOverview'
-import { createQuestion, setSelected, updateQuestionsList } from 'redux/Creator/actions'
+import { createQuestion, setSelected, updateQuestionsList, flushCreatorData } from 'redux/Creator/actions'
 import QuestionSettings from './QuestionSettings/QuestionSettings'
 import axios from 'axios'
 import { useSnackbar } from 'notistack'
@@ -52,7 +52,7 @@ const defaultSnackSettings = {
     preventDuplicate: true,
 }
 
-const Creator = ({ state, createQuestion, setSelected, updateQuestionsList, dictionary, errorDictionary }) => {
+const Creator = ({ state, createQuestion, setSelected, updateQuestionsList, dictionary, errorDictionary, flushCreatorData }) => {
     const classes = useStyles()
     const { enqueueSnackbar } = useSnackbar()
     const [published, setPublished] = useState(false)
@@ -152,7 +152,15 @@ const Creator = ({ state, createQuestion, setSelected, updateQuestionsList, dict
                             edge='start'
                             color='inherit'
                             className={classes.homeButton}
-                            onClick={() => { history.push('/') }}
+                            onClick={() => {
+                                let conf = true
+                                if(!published) {
+                                    conf = window.confirm(dictionary.EXIT_CONFIRM)
+                                }
+                                if(!conf) return
+                                flushCreatorData()
+                                history.push('/')
+                            }}
                         >
                             <HomeIcon />
                         </IconButton>
@@ -238,6 +246,7 @@ const mapDispatchToProps = {
     createQuestion,
     setSelected,
     updateQuestionsList,
+    flushCreatorData,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Creator)

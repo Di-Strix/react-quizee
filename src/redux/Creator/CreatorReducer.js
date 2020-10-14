@@ -1,24 +1,24 @@
 import * as TYPES from './types'
 import * as QUESTION_TYPES from 'redux/questionTypes'
 
-const initialState = {
+const initialState = () => ({
     questions: [],
     caption: 'New Quizee',
     selected: -1,
-}
+})
 
-const questionInitialState = {
+const questionInitialState = () => ({
     type: QUESTION_TYPES.ONE_TRUE,
     caption: 'Question caption',
     answerOptions: [{id: new Date().getTime(), val: 'Answer'}],
     answer: null,
     config: {}
-}
+})
 
 const handlers = {
     [TYPES.CREATE_QUESTION]: (state) => ({
         ...state,
-        questions: [...state.questions, JSON.parse(JSON.stringify(questionInitialState))],
+        questions: [...state.questions, questionInitialState()],
         selected: state.questions.length,
     }),
     [TYPES.UPDATE_QUESTIONS_LIST]: (state, {payload}) => ({...state, questions: [...payload]}),
@@ -32,10 +32,11 @@ const handlers = {
         }
     },
     [TYPES.UPDATE_QUIZEE_CAPTION]: (state, {payload}) => ({...state, caption: payload}),
+    [TYPES.FLUSH_DATA]: () => initialState(),
     DEFAULT: state => state,
 }
 
-export default (state = initialState, action) => {
+export default (state = initialState(), action) => {
     const handle = handlers[action.type] || handlers.DEFAULT
     return handle(state, action)
 }
