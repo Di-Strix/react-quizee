@@ -9,9 +9,9 @@ import { createQuestion, setSelected, updateQuestionsList, flushCreatorData } fr
 import QuestionSettings from './QuestionSettings/QuestionSettings'
 import axios from 'axios'
 import { useSnackbar } from 'notistack'
-import { useHistory } from 'react-router-dom'
 import { checkQuestions } from './verificationFunctions'
 import VerificationContext from './Context/VerificationContext'
+import { useGotoPath } from 'LangSelector'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -57,7 +57,7 @@ const Creator = ({ state, createQuestion, setSelected, updateQuestionsList, dict
     const { enqueueSnackbar } = useSnackbar()
     const [published, setPublished] = useState(false)
     const [verificationResults, setVerificationResults] = useState([])
-    const history = useHistory()
+    const gotoPath = useGotoPath()
 
     useEffect(() => {
         const allErrors = checkQuestions(state.questions)
@@ -154,12 +154,12 @@ const Creator = ({ state, createQuestion, setSelected, updateQuestionsList, dict
                             className={classes.homeButton}
                             onClick={() => {
                                 let conf = true
-                                if(!published) {
+                                if (!published) {
                                     conf = window.confirm(dictionary.EXIT_CONFIRM)
                                 }
-                                if(!conf) return
+                                if (!conf) return
                                 flushCreatorData()
-                                history.push('/')
+                                gotoPath('')
                             }}
                         >
                             <HomeIcon />

@@ -24,9 +24,9 @@ import {
 import Footer from './Screens/Components/Footer/Footer'
 import { Grid, makeStyles, Toolbar } from '@material-ui/core'
 import { screenChangeTransitionTime as transitionTime, captionShowTime } from 'Viewer/constants'
-import { useHistory } from 'react-router-dom'
 import IsConstructorMode from './Context/IsConstructorModeContext'
 import { placeDataToLocString } from 'helperFunctions'
+import { useGotoPath } from 'LangSelector'
 
 const useStyles = makeStyles(theme => ({
     constructorViewer: {
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 
 const Viewer = (props) => {
     const classes = useStyles()
-    const history = useHistory()
+    const gotoPath = useGotoPath()
 
     const fetchQuizee = useMemo(() => {
         if (props.ConstructorMode) {
@@ -58,7 +58,7 @@ const Viewer = (props) => {
             }
         }
         return () => {
-            if (!props.state.quizeeId) return history.push('/')
+            if (!props.state.quizeeId) return gotoPath('')
             const startTime = new Date().getTime()
             props.showCaptionScreen()
             const loaderId = setTimeout(() => {
@@ -92,7 +92,6 @@ const Viewer = (props) => {
         props.showCaptionScreen,
         props.showQuestionsScreen,
         props.throwError,
-        history,
         props.question,
     ])
 

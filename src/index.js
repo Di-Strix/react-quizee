@@ -1,7 +1,7 @@
 import ScopedCssBaseline from '@material-ui/core/ScopedCssBaseline'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { compose, createStore, applyMiddleware } from 'redux'
 import './index.scss'
@@ -13,6 +13,7 @@ import { SnackbarProvider } from 'notistack'
 import Creator from './Creator/Creator'
 import thunk from 'redux-thunk'
 import FooterContextProvider from 'Viewer/Context/Footer/FooterContextProvider'
+import LangSelector from './LangSelector'
 
 const store = createStore(rootReducer, compose(
     applyMiddleware(thunk),
@@ -34,13 +35,22 @@ ReactDOM.render(
                         <BrowserRouter>
                             <Switch>
                                 <Route path='/' exact>
-                                    <HomeScreen />
+                                    <Redirect to='/en/' />
                                 </Route>
-                                <Route path='/Viewer'>
-                                    <Viewer />
-                                </Route>
-                                <Route path='/Creator'>
-                                    <Creator />
+                                <Route path='/:langCode'>
+                                    <LangSelector>
+                                        <Switch>
+                                            <Route path='/:langCode/' exact>
+                                                <HomeScreen />
+                                            </Route>
+                                            <Route path='/:langCode/Viewer'>
+                                                <Viewer />
+                                            </Route>
+                                            <Route path='/:langCode/Creator'>
+                                                <Creator />
+                                            </Route>
+                                        </Switch>
+                                    </LangSelector>
                                 </Route>
                             </Switch>
                         </BrowserRouter>

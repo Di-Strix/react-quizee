@@ -22,8 +22,8 @@ import { connect } from 'react-redux'
 import { fetchQuizees, showQuizees } from 'redux/Home/actions'
 import { setQuizeeID, setText } from 'redux/Viewer/actions'
 import axios from 'axios'
-import { useHistory } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
+import { useGotoPath } from 'LangSelector'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
 
 const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerText, dictionary }) => {
     const classes = useStyles()
-    const history = useHistory()
+    const gotoPath = useGotoPath()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
     const startFetchingQuizees = useCallback(() => {
@@ -96,8 +96,8 @@ const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerTe
     const clickHandler = useCallback((id, caption) => {
         setQuizeeID(id)
         setViewerText(caption)
-        history.push('/Viewer')
-    }, [history, setQuizeeID, setViewerText])
+        gotoPath('Viewer')
+    }, [gotoPath, setQuizeeID, setViewerText])
 
     return (
         <Grid
@@ -113,7 +113,6 @@ const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerTe
                 </AppBar>
             </HideOnScroll>
             <Box maxWidth='lg' style={{ flexGrow: 1 }}>
-
                 <Container maxWidth='lg'>
                     <Grid
                         container
@@ -150,10 +149,9 @@ const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerTe
                         }
                     </Grid>
                 </Container>
-
             </Box>
             <div className={classes.stickyFab}>
-                <Fab color="primary" aria-label="add" onClick={() => history.push('/Creator')}>
+                <Fab color="primary" aria-label="add" onClick={() => gotoPath('Creator')}>
                     <EditIcon />
                 </Fab>
             </div>
