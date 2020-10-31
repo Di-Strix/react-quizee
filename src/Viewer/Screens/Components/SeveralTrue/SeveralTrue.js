@@ -19,10 +19,12 @@ class SeveralTrue extends React.Component {
     }
 
     processAnswerCount(obj = {}) {
-        const checked = Object.keys(obj).reduce((acc, val) => acc + val, 0)
+        const checked = Object.keys(obj).reduce((acc, key) => acc + obj[key], 0)
         if (checked >= this.requiredAnswerCount) {
             if (!this.props.footerActive) this.props.setFooterButtonState(true)
         } else if (this.props.footerActive) this.props.setFooterButtonState(false)
+
+        return checked
     }
 
     clickHandler(id) {
@@ -33,7 +35,7 @@ class SeveralTrue extends React.Component {
     }
 
     submitHandler() {
-        if (this.state.length <= this.requiredAnswerCount) return
+        if (this.processAnswerCount(this.state) < this.requiredAnswerCount) return
         const answer = []
         Object.keys(this.state).forEach(key => this.state[key] ? answer.push(+key) : null)
 
