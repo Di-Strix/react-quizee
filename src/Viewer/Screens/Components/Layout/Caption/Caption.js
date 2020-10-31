@@ -11,7 +11,8 @@ const useStyles = makeStyles(theme => ({
     },
     preTag: {
         fontFamily: theme.typography.fontFamily,
-        margin: '0'
+        margin: '0',
+        whiteSpace: 'pre-line',
     }
 }))
 
@@ -28,7 +29,8 @@ const Caption = ({ children }) => {
             <Container>
                 <Box m={2}>
                     <Typography variant='h4' component='h4' >
-                        <pre className={classes.preTag}>{children}</pre></Typography>
+                        <pre className={classes.preTag}>{children}</pre>
+                    </Typography>
                 </Box>
             </Container>
         </Grid>

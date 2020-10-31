@@ -1,7 +1,5 @@
 import React from 'react'
-// import Loader from '../../../../GlobalComponents/Loader/Loader'
 import { CircularProgress, makeStyles } from '@material-ui/core'
-// import './InfoScreen.scss'
 import { Grid } from '@material-ui/core'
 import Caption from '../Layout/Caption/Caption'
 
@@ -13,7 +11,7 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'center',
     },
 }))
-export default function EndTitle({ loading, children }) {
+export default function InfoScreen({ loading, caption, children }) {
     const classes = useStyles()
 
     return (
@@ -23,7 +21,7 @@ export default function EndTitle({ loading, children }) {
             className={classes.root}
         >
             <Grid item>
-                <Caption>{children}</Caption>
+                <Caption>{caption}</Caption>
             </Grid>
             {
                 loading
@@ -34,6 +32,9 @@ export default function EndTitle({ loading, children }) {
                     )
                     : null
             }
+            <Grid item>
+                {children}
+            </Grid>
         </Grid>
     )
 }

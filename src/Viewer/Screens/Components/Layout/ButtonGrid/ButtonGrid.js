@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     preTag: {
         fontFamily: theme.typography.fontFamily,
         margin: '0',
-        whiteSpace: 'normal'
+        whiteSpace: 'pre-line',
     }
 }))
 
