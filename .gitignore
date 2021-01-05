@@ -25,3 +25,11 @@ yarn-error.log*
 #editors
 .vscode
 .idea
+
+#logs
+ui-debug.log
+firebase-debug.log
+*.log
+
+#workspaces
+workspace.code-workspace
