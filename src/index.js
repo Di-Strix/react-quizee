@@ -36,23 +36,23 @@ ReactDOM.render(
                     >
                         <BrowserRouter>
                             <Switch>
-                                <Route path='/' exact>
-                                    <LangSelector />
-                                </Route>
                                 <Route path='/:langCode'>
                                     <LangSelector>
                                         <Switch>
-                                            <Route path='/:langCode'>
-                                                <HomeScreen />
-                                            </Route>
                                             <Route path='/:langCode/Viewer'>
                                                 <Viewer />
                                             </Route>
                                             <Route path='/:langCode/Creator'>
                                                 <Creator />
                                             </Route>
+                                            <Route path='/:langCode'>
+                                                <HomeScreen />
+                                            </Route>
                                         </Switch>
                                     </LangSelector>
+                                </Route>
+                                <Route path='/' exact>
+                                    <LangSelector />
                                 </Route>
                             </Switch>
                         </BrowserRouter>
