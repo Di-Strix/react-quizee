@@ -17,7 +17,9 @@ import LangSelector from './LangSelector'
 
 const store = createStore(rootReducer, compose(
     applyMiddleware(thunk),
-    process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+    process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION__
+        ? window.__REDUX_DEVTOOLS_EXTENSION__()
+        : compose,
 ))
 
 ReactDOM.render(
@@ -35,12 +37,12 @@ ReactDOM.render(
                         <BrowserRouter>
                             <Switch>
                                 <Route path='/' exact>
-                                    <Redirect to='/en/' />
+                                    <LangSelector />
                                 </Route>
                                 <Route path='/:langCode'>
                                     <LangSelector>
                                         <Switch>
-                                            <Route path='/:langCode/' exact>
+                                            <Route path='/:langCode'>
                                                 <HomeScreen />
                                             </Route>
                                             <Route path='/:langCode/Viewer'>
