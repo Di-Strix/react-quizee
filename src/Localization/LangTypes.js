@@ -1,2 +1,2 @@
-export const EN = 'EN'
-export const UA = 'UA'
+export const en = 'en'
+export const uk = 'uk'

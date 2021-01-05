@@ -1,15 +1,17 @@
 import * as TYPES from './types'
-import langList from 'Localization/Localization'
+import loadLangDict from 'Localization/Localization'
+import * as LangTypes from 'Localization/LangTypes'
 
 export const setLanguage = (langName = '') => {
     return async dispatch => {
-        if(!langList[langName.toUpperCase()]) return
+        if(!LangTypes[langName]) return
         
-        const dictModule = await langList[langName.toUpperCase()]()
+        const dictModule = await loadLangDict(langName)
+
         dispatch({
             type: TYPES.SET_LANGUAGE,
             payload: {
-                langName: langName.toUpperCase(),
+                langName: langName,
                 newDictionary: dictModule.default
             }
         })

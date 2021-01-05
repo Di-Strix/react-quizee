@@ -6,19 +6,37 @@ import { setLanguage } from 'redux/Global/actions'
 import { CircularProgress } from '@material-ui/core'
 
 const LangSelector = ({ state, children, setLanguage }) => {
-    const { langCode = 'en' } = useParams()
+    const { langCode } = useParams()
+    const gotoPath = useGotoPath()
 
     useEffect(() => {
-        setLanguage(langCode)
+        if(state.lang === langCode) return
+
+        const processPreferedLanguagesList = () => {
+            let newLangCode
+
+            navigator.languages.every(code =>
+                LANG_TYPES[code] ? !Boolean(newLangCode = code) : true
+            )
+
+            return newLangCode
+        }
+
+        const newLangCode =
+            LANG_TYPES[langCode]
+                ? langCode
+                : processPreferedLanguagesList() || 'en'
+
+        console.log(navigator.languages)
+        setLanguage(newLangCode)
+        gotoPath(undefined, newLangCode)
         //eslint-disable-next-line
     }, [langCode])
 
-    if (!LANG_TYPES[langCode.toUpperCase()]) {
-        return <Redirect to='/en/' />
-    }
-    if (state.lang !== langCode.toUpperCase()) {
+    if (state.lang !== langCode) {
         return <CircularProgress />
     }
+
     return children
 }
 
@@ -33,9 +51,9 @@ const mapDispatchToProps = {
 export default connect(mapStateToProps, mapDispatchToProps)(LangSelector)
 
 export const useGotoPath = () => {
-    const langCode = useSelector(mapStateToProps).state.lang.toLowerCase()
+    const langCodeDefault = useSelector(mapStateToProps).state.lang
     const history = useHistory()
-    return (path = '') => {
-        history.push(`/${langCode}/${path}`)
+    return (path = '', langCode) => {
+        history.push(`/${langCode || langCodeDefault}/${path.startsWith('/') ? path.slice(1) : path}`)
     }
 }
