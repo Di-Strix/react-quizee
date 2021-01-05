@@ -3,15 +3,10 @@ import {
     Box,
     Grid,
     makeStyles,
-    Card,
-    CardContent,
-    CardActions,
-    Button,
     Typography,
     CircularProgress,
     AppBar,
     Toolbar,
-    CardMedia,
     Container,
     Fab,
     useScrollTrigger,
@@ -24,25 +19,12 @@ import { setQuizeeID, setText } from 'redux/Viewer/actions'
 import axios from 'axios'
 import { useSnackbar } from 'notistack'
 import { useGotoPath } from 'LangSelector'
+import Card from './Components/Card'
 
 const useStyles = makeStyles(theme => ({
     root: {
         minHeight: '100vh',
-        Width: '100vw',
-    },
-    content: {
-        marginTop: theme.spacing(2),
-    },
-    card: {
-        width: 275,
-        maxHeight: 374,
-    },
-    cardMargin: {
-        margin: `0 ${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
-    },
-    media: {
-        height: 0,
-        paddingTop: '56.25%', // 16:9
+        width: '100vw',
     },
     stickyFab: {
         position: 'sticky',
@@ -53,13 +35,6 @@ const useStyles = makeStyles(theme => ({
     },
     gutterBottom: {
         marginBottom: theme.spacing(2),
-    },
-    cardHeader: {
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        display: '-webkit-box',
-        '-webkit-line-clamp': 1,
-        '-webkit-box-orient': 'vertical',
     },
 }))
 
@@ -130,28 +105,11 @@ const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerTe
                             state.loading
                                 ? <CircularProgress />
                                 : state.quizeeList.map(quizee => (
-                                    <Grid item className={classes.cardMargin} key={quizee.id}>
-                                        <Card className={classes.card}>
-                                            <CardMedia
-                                                className={classes.media}
-                                                image={quizee.img || 'http://placeimg.com/275/155/any'}
-                                            />
-                                            <CardContent>
-                                                <Typography variant='h5' component='h2' gutterBottom className={classes.cardHeader} title={quizee.caption}>
-                                                    {quizee.caption}
-                                                </Typography>
-                                                <Typography variant="body2" color="textSecondary" component="p" noWrap>
-                                                    {''.concat(dictionary.quizeeCard.QUESTIONS_COUNT, quizee.questionsCount)}
-                                                </Typography>
-                                            </CardContent>
-                                            <CardActions>
-                                                <Button size='small'
-                                                    onClick={() => clickHandler(quizee.id, quizee.caption)}>
-                                                    {dictionary.quizeeCard.START_TEST}
-                                                </Button>
-                                            </CardActions>
-                                        </Card>
-                                    </Grid>
+                                    <Card
+                                        key={quizee.id}
+                                        quizee={quizee}
+                                        onClick={() => clickHandler(quizee.id, quizee.caption)}
+                                    />
                                 ))
                         }
                     </Grid>
