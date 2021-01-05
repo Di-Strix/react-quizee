@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useParams, Redirect, useHistory } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { connect, useSelector } from 'react-redux'
 import * as LANG_TYPES from 'Localization/LangTypes'
 import { setLanguage } from 'redux/Global/actions'

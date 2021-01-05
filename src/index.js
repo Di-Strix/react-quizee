@@ -1,7 +1,7 @@
 import ScopedCssBaseline from '@material-ui/core/ScopedCssBaseline'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { compose, createStore, applyMiddleware } from 'redux'
 import './index.scss'
