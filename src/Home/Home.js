@@ -54,6 +54,13 @@ const useStyles = makeStyles(theme => ({
     gutterBottom: {
         marginBottom: theme.spacing(2),
     },
+    cardHeader: {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        display: '-webkit-box',
+        '-webkit-line-clamp': 1,
+        '-webkit-box-orient': 'vertical',
+    },
 }))
 
 const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerText, dictionary }) => {
@@ -130,7 +137,7 @@ const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerTe
                                                 image={quizee.img || 'http://placeimg.com/275/155/any'}
                                             />
                                             <CardContent>
-                                                <Typography variant='h5' component='h2' gutterBottom>
+                                                <Typography variant='h5' component='h2' gutterBottom className={classes.cardHeader} title={quizee.caption}>
                                                     {quizee.caption}
                                                 </Typography>
                                                 <Typography variant="body2" color="textSecondary" component="p" noWrap>
