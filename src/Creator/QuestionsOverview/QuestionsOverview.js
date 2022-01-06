@@ -28,82 +28,89 @@ const useStyles = makeStyles(theme => ({
         height: '100%',
         width: '100%',
     },
-
-    fit: {
-        height: 'fit-content',
-    },
-    innerShadow: {
-        boxShadow: 'inset 0px 11px 8px -10px #ccc, inset 0px -11px 8px -10px #ccc;',
-    },
+  fit: {
+    height: 'fit-content',
+  },
+  innerShadow: {
+    boxShadow: 'inset 0px 11px 8px -10px #ccc, inset 0px -11px 8px -10px #ccc;',
+  },
 }))
 
-const QuestionsOverview = ({ state, onAdd = () => { }, onRemove = () => { }, updateQuizeeCaption, dictionary }) => {
-    const classes = useStyles()
-    const [caption, setCaption] = useState(() => state.caption)
+const QuestionsOverview = ({ state, onAdd = () => {}, onRemove = () => {}, updateQuizeeCaption, dictionary }) => {
+  const classes = useStyles()
+  const [caption, setCaption] = useState(() => state.caption)
 
-    const dispatchToStore = useCallback(
-        debounce(val => {
-            updateQuizeeCaption(val)
-        }, 300),
-        [updateQuizeeCaption])
+  const dispatchToStore = useCallback(
+    debounce(val => {
+      updateQuizeeCaption(val)
+    }, 300),
+    [updateQuizeeCaption]
+  )
 
-    const setCaptionWithDispatch = useCallback(val => {
-        setCaption(val)
-        dispatchToStore(val)
-    }, [dispatchToStore, setCaption])
+  const setCaptionWithDispatch = useCallback(
+    val => {
+      setCaption(val)
+      dispatchToStore(val)
+    },
+    [dispatchToStore, setCaption]
+  )
 
-    return (
-        <React.Fragment>
-            <Grid item className={classes.margin2}>
-                <TextField value={caption}
-                    onChange={e => setCaptionWithDispatch(e.target.value)}
-                    fullWidth
-                    error={state.caption.length <= 0}
-                    label={dictionary.QUIZEE_CAPTION} />
-            </Grid>
-            <Grid
-                item
-                className={[classes.grow, classes.cardsMargin].join(' ')}
-            >
-                <AutoSizer>
-                    {({ height, width }) => (
-                        <React.Fragment>
-                            <div className={classes.innerShadow} style={{
-                                height: height,
-                                width: width,
-                                position: 'absolute',
-                                zIndex: 100,
-                                pointerEvents: 'none',
-                            }}></div>
-                            <FixedSizeList
-                                height={height}
-                                itemCount={state.questions.length}
-                                itemSize={width / (16 / 9)}
-                                width={width}
-                            >
-                                {(props) => <PreviewCard {...props} onRemove={onRemove} />}
-                            </FixedSizeList>
-                        </React.Fragment>
-                    )}
-                </AutoSizer>
-            </Grid>
-            <Grid container justify='center' className={classes.marginBottom2}>
-                <Grid item xs={12} lg={6}>
-                    <Paper variant='outlined'>
-                        <Button onClick={onAdd} className={classes.takeAllSpace}><AddIcon /></Button>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </React.Fragment>
-    )
+  return (
+    <React.Fragment>
+      <Grid item className={classes.margin2}>
+        <TextField
+          value={caption}
+          onChange={e => setCaptionWithDispatch(e.target.value)}
+          fullWidth
+          error={state.caption.length <= 0}
+          label={dictionary.QUIZEE_CAPTION}
+        />
+      </Grid>
+      <Grid item className={[classes.grow, classes.cardsMargin].join(' ')}>
+        <AutoSizer>
+          {({ height, width }) => (
+            <React.Fragment>
+              <div
+                className={classes.innerShadow}
+                style={{
+                  height: height,
+                  width: width,
+                  position: 'absolute',
+                  zIndex: 100,
+                  pointerEvents: 'none',
+                }}
+              ></div>
+              <FixedSizeList
+                height={height}
+                itemCount={state.questions.length}
+                itemSize={width / (16 / 9)}
+                width={width}
+              >
+                {props => <PreviewCard {...props} onRemove={onRemove} />}
+              </FixedSizeList>
+            </React.Fragment>
+          )}
+        </AutoSizer>
+      </Grid>
+      <Grid container justify='center' className={classes.marginBottom2}>
+        <Grid item xs={12} lg={6}>
+          <Paper variant='outlined'>
+            <Button onClick={onAdd} className={classes.takeAllSpace}>
+              <AddIcon />
+            </Button>
+          </Paper>
+        </Grid>
+      </Grid>
+    </React.Fragment>
+  )
 }
 
 const mapStateToProps = state => ({
-    state: state.Creator,
-    dictionary: state.Global.dictionary.Creator.sections.QuestionsOverview
+  state: state.Creator,
+  dictionary: state.Global.dictionary.Creator.sections.QuestionsOverview,
 })
 const mapDispatchToProps = {
-    updateQuizeeCaption,
+  updateQuizeeCaption,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionsOverview)

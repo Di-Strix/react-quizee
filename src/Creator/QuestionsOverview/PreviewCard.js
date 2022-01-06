@@ -10,29 +10,29 @@ import SeveralTrueIcon from '@mui/icons-material/DoneAll'
 import OneTrueIcon from '@mui/icons-material/Done'
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        overflow: 'hidden'
-    },
-    selected: {
-        border: '1px solid blue',
-        borderRadius: theme.shape.borderRadius,
-    },
-    takeAllSpace: {
-        height: '100%',
-        width: '100%',
-    },
-    removeButton: {
-        position: 'absolute',
-        bottom: theme.spacing(1),
-        right: theme.spacing(1),
-        transition: 'color .15s',
-    },
-    disabledColor: {
-        color: theme.palette.action.disabled,
-    },
-    cardContent: {
-        padding: theme.spacing(2),
-    },
+  root: {
+    overflow: 'hidden',
+  },
+  selected: {
+    border: '1px solid blue',
+    borderRadius: theme.shape.borderRadius,
+  },
+  takeAllSpace: {
+    height: '100%',
+    width: '100%',
+  },
+  removeButton: {
+    position: 'absolute',
+    bottom: theme.spacing(1),
+    right: theme.spacing(1),
+    transition: 'color .15s',
+  },
+  disabledColor: {
+    color: theme.palette.action.disabled,
+  },
+  cardContent: {
+    padding: theme.spacing(2),
+  },
 }))
 
 function PreviewCard({ index, style, setSelected = () => { }, onRemove = () => { }, state, questions }) {
@@ -41,24 +41,24 @@ function PreviewCard({ index, style, setSelected = () => { }, onRemove = () => {
     const [buttonHover, setButtonHover] = useState(false)
     const [cardHover, setCardHover] = useState(false)
 
-    const rootStyles = { ...style, height: style.height + theme.spacing(1) } // increasing div's height to make gutter bottom
-    rootStyles.top = style.top + theme.spacing(index + 1) // calculating position height of card with spacing
+  const rootStyles = { ...style, height: style.height + theme.spacing(1) } // increasing div's height to make gutter bottom
+  rootStyles.top = style.top + theme.spacing(index + 1) // calculating position height of card with spacing
 
-    let PreviewIcon = <></>
+  let PreviewIcon = <></>
 
-    switch (questions[index].type) {
-        case TYPES.WRITE_ANSWER:
-            PreviewIcon = TextFieldsIcon
-            break
-        case TYPES.SEVERAL_TRUE:
-            PreviewIcon = SeveralTrueIcon
-            break
-        case TYPES.ONE_TRUE:
-            PreviewIcon = OneTrueIcon
-            break
-        default:
-            break
-    }
+  switch (questions[index].type) {
+    case TYPES.WRITE_ANSWER:
+      PreviewIcon = TextFieldsIcon
+      break
+    case TYPES.SEVERAL_TRUE:
+      PreviewIcon = SeveralTrueIcon
+      break
+    case TYPES.ONE_TRUE:
+      PreviewIcon = OneTrueIcon
+      break
+    default:
+      break
+  }
 
     return (
         <div style={rootStyles}>
@@ -112,11 +112,11 @@ function PreviewCard({ index, style, setSelected = () => { }, onRemove = () => {
 }
 
 const mapStateToProps = state => ({
-    state: state.Creator,
-    questions: state.Creator.questions,
+  state: state.Creator,
+  questions: state.Creator.questions,
 })
 const mapDispatchToProps = {
-    setSelected,
+  setSelected,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PreviewCard)

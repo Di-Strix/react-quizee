@@ -41,47 +41,39 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const CustomImageComponent = imgLink => {
-    return () => (
-        <Image
-            src={imgLink}
-            disableSpinner
-            aspectRatio={16/9}
-            animationDuration={1000}
-        />
-    )
+  return () => <Image src={imgLink} disableSpinner aspectRatio={16 / 9} animationDuration={1000} />
 }
 
 const CardComponent = ({ dictionary, quizee, onClick }) => {
-    const classes = useStyles()
+  const classes = useStyles()
 
-    return (
-        <Grid item className={classes.cardMargin} key={quizee.id}>
-            <Card className={classes.card}>
-                <CardMedia
-                    className={classes.media}
-                    component={CustomImageComponent(quizee.img || `http://placeimg.com/275/155/any?t=${Math.random()}`)}
-                />
-                <CardContent>
-                    <Typography variant='h5' component='h2' gutterBottom className={classes.cardHeader} title={quizee.caption}>
-                        {quizee.caption}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p" noWrap>
-                        {''.concat(dictionary.quizeeCard.QUESTIONS_COUNT, quizee.questionsCount)}
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size='small'
-                        onClick={onClick}>
-                        {dictionary.quizeeCard.START_TEST}
-                    </Button>
-                </CardActions>
-            </Card>
-        </Grid>
-    )
+  return (
+    <Grid item className={classes.cardMargin} key={quizee.id}>
+      <Card className={classes.card}>
+        <CardMedia
+          className={classes.media}
+          component={CustomImageComponent(quizee.img || `http://placeimg.com/275/155/any?t=${Math.random()}`)}
+        />
+        <CardContent>
+          <Typography variant='h5' component='h2' gutterBottom className={classes.cardHeader} title={quizee.caption}>
+            {quizee.caption}
+          </Typography>
+          <Typography variant='body2' color='textSecondary' component='p' noWrap>
+            {''.concat(dictionary.quizeeCard.QUESTIONS_COUNT, quizee.questionsCount)}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button size='small' onClick={onClick}>
+            {dictionary.quizeeCard.START_TEST}
+          </Button>
+        </CardActions>
+      </Card>
+    </Grid>
+  )
 }
 
 const mapStateToProps = state => ({
-    dictionary: state.Global.dictionary.Home
+  dictionary: state.Global.dictionary.Home,
 })
 
 export default connect(mapStateToProps)(CardComponent)

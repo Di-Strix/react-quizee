@@ -5,8 +5,8 @@ import HomeReducer from './Home/HomeReducer'
 import GlobalReducer from './Global/GlobalReducer'
 
 export const rootReducer = combineReducers({
-    Viewer: ViewerReducer,
-    Home: HomeReducer,
-    Creator: CreatorReducer,
-    Global: GlobalReducer
+  Viewer: ViewerReducer,
+  Home: HomeReducer,
+  Creator: CreatorReducer,
+  Global: GlobalReducer,
 })

@@ -7,13 +7,12 @@ import SettingsCard from '../Components/SettingsCard'
 import * as ERR_TYPE from 'Creator/errorTypes'
 
 const acceptableErrors = [
-    ERR_TYPE.ERR_QUESTION_UNKNOWN_TYPE,
-    ERR_TYPE.ERR_QUESTION_INVALID_CONFIG_TYPE,
-    ERR_TYPE.ERR_QUESTION_ANSWER_INVALID_TYPE
+  ERR_TYPE.ERR_QUESTION_UNKNOWN_TYPE,
+  ERR_TYPE.ERR_QUESTION_INVALID_CONFIG_TYPE,
+  ERR_TYPE.ERR_QUESTION_ANSWER_INVALID_TYPE,
 ]
 
 const QuestionType = ({ updateQuestion, question, dictionary }) => {
-
     const typeChangeHandler = ({ target }) => {
         const questionCopy = JSON.parse(JSON.stringify(question))
 
@@ -43,12 +42,12 @@ const QuestionType = ({ updateQuestion, question, dictionary }) => {
 }
 
 const mapStateToProps = state => ({
-    question: state.Creator.questions[state.Creator.selected],
-    state: state.Creator,
-    dictionary: state.Global.dictionary.Creator.sections.QuestionSettings
+  question: state.Creator.questions[state.Creator.selected],
+  state: state.Creator,
+  dictionary: state.Global.dictionary.Creator.sections.QuestionSettings,
 })
 const mapDispatchToProps = {
-    updateQuestion,
+  updateQuestion,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionType)
