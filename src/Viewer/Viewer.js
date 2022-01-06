@@ -161,14 +161,14 @@ const Viewer = props => {
 
   switch (props.state.screen) {
     case SCREENS.CAPTION:
-      screen = <InfoScreen loading={props.state.loading}>{props.state.text}</InfoScreen>
+      screen = <InfoScreen loading={props.state.loading} caption={props.state.text} />
       break
     case SCREENS.QUEST:
       const question = props.state.questions[props.state.answers.length]
       screen = <MainScreen question={question} />
       break
     case SCREENS.ERROR:
-      screen = <InfoScreen>{props.state.text}</InfoScreen>
+      screen = <InfoScreen caption={props.state.text}></InfoScreen>
       break
     default:
       console.error('No screen found as requested:', props.state.screen)
