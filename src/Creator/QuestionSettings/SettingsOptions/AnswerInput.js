@@ -1,13 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import {
-    List,
-    ListItem,
-    ListItemText,
-    TextField,
-    ListItemIcon,
-    Checkbox,
-    debounce
-} from '@mui/material'
+import { List, ListItem, ListItemText, TextField, ListItemIcon, Checkbox, debounce } from '@mui/material'
 import { connect } from 'react-redux'
 import { updateQuestion } from 'redux/Creator/actions'
 import SettingsCard from '../Components/SettingsCard'

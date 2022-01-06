@@ -35,11 +35,11 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-function PreviewCard({ index, style, setSelected = () => { }, onRemove = () => { }, state, questions }) {
-    const classes = useStyles()
-    const theme = useTheme()
-    const [buttonHover, setButtonHover] = useState(false)
-    const [cardHover, setCardHover] = useState(false)
+function PreviewCard({ index, style, setSelected = () => {}, onRemove = () => {}, state, questions }) {
+  const classes = useStyles()
+  const theme = useTheme()
+  const [buttonHover, setButtonHover] = useState(false)
+  const [cardHover, setCardHover] = useState(false)
 
   const rootStyles = { ...style, height: style.height + theme.spacing(1) } // increasing div's height to make gutter bottom
   rootStyles.top = style.top + theme.spacing(index + 1) // calculating position height of card with spacing
@@ -60,55 +60,53 @@ function PreviewCard({ index, style, setSelected = () => { }, onRemove = () => {
       break
   }
 
-    return (
-        <div style={rootStyles}>
-            <Paper
-                style={{
-                    height: style.height,
-                    width: `calc(${style.width} - ${theme.spacing(2)})`,
-                    margin: '0 auto',
-                    zIndex: 0,
-                    overflow: 'hidden',
-                    position: 'relative',
-                }}
-                onMouseEnter={() => setCardHover(true)}
-                onMouseLeave={() => setCardHover(false)}
-                elevation={cardHover ? 3 : 1}
-            >
-                    <IconButton
-                        className={[classes.removeButton, buttonHover ? '' : classes.disabledColor].join(' ')}
-                        disableRipple
-                        size={'small'}
-                        onPointerEnter={() => setButtonHover(true)}
-                        onPointerLeave={() => setButtonHover(false)}
-                        color={buttonHover ? 'secondary' : 'default'}
-                        onClick={() => onRemove(index)}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
-                    <Grid
-                        container
-                        className={[classes.cardContent, classes.takeAllSpace, state.selected === index ? classes.selected : ''].join(' ')}
-                        direction='column'
-                        justify='center'
-                        alignItems='center'
-                        onClick={() => setSelected(index)}
-                    >
-                        <Typography
-                            style={{ maxWidth: '100%' }}
-                            variant='h6' gutterBottom
-                            noWrap
-                        >
-                            {
-                                questions[index].caption || ' '
-                                /*not space. alt+255(num). To prevent icon from jumping when empty text*/
-                            }
-                        </Typography>
-                        <PreviewIcon color='primary' fontSize='large' />
-                    </Grid>
-            </Paper>
-        </div>
-    )
+  return (
+    <div style={rootStyles}>
+      <Paper
+        style={{
+          height: style.height,
+          width: `calc(${style.width} - ${theme.spacing(2)})`,
+          margin: '0 auto',
+          zIndex: 0,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
+        onMouseEnter={() => setCardHover(true)}
+        onMouseLeave={() => setCardHover(false)}
+        elevation={cardHover ? 3 : 1}
+      >
+        <IconButton
+          className={[classes.removeButton, buttonHover ? '' : classes.disabledColor].join(' ')}
+          disableRipple
+          size={'small'}
+          onPointerEnter={() => setButtonHover(true)}
+          onPointerLeave={() => setButtonHover(false)}
+          color={buttonHover ? 'secondary' : 'default'}
+          onClick={() => onRemove(index)}
+        >
+          <DeleteIcon />
+        </IconButton>
+        <Grid
+          container
+          className={[classes.cardContent, classes.takeAllSpace, state.selected === index ? classes.selected : ''].join(
+            ' '
+          )}
+          direction='column'
+          justify='center'
+          alignItems='center'
+          onClick={() => setSelected(index)}
+        >
+          <Typography style={{ maxWidth: '100%' }} variant='h6' gutterBottom noWrap>
+            {
+              questions[index].caption || ' '
+              /*not space. alt+255(num). To prevent icon from jumping when empty text*/
+            }
+          </Typography>
+          <PreviewIcon color='primary' fontSize='large' />
+        </Grid>
+      </Paper>
+    </div>
+  )
 }
 
 const mapStateToProps = state => ({

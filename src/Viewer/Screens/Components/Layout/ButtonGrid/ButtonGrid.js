@@ -7,20 +7,20 @@ import IsConstructorMode from 'Viewer/Context/IsConstructorModeContext'
 import AutoSizer from 'react-virtualized-auto-sizer'
 
 const useStyles = makeStyles(theme => ({
-    buttonsHolder: {
-        margin: theme.spacing(2),
-    },
-    button: {
-        width: '100%',
-        height: '100%',
-        padding: theme.spacing(2),
-        textTransform: 'none',
-    },
-    preTag: {
-        fontFamily: theme.typography.fontFamily,
-        margin: '0',
-        whiteSpace: 'pre-line',
-    }
+  buttonsHolder: {
+    margin: theme.spacing(2),
+  },
+  button: {
+    width: '100%',
+    height: '100%',
+    padding: theme.spacing(2),
+    textTransform: 'none',
+  },
+  preTag: {
+    fontFamily: theme.typography.fontFamily,
+    margin: '0',
+    whiteSpace: 'pre-line',
+  },
 }))
 
 const ButtonGrid = ({
@@ -34,15 +34,15 @@ const ButtonGrid = ({
 }) => {
   let ButtonAnim = Zoom
 
-    if (useContext(IsConstructorMode)) {
-        ButtonAnim = ({children}) => children
-    }
+  if (useContext(IsConstructorMode)) {
+    ButtonAnim = ({ children }) => children
+  }
 
-    const classes = useStyles()
-    const defaultProps = {
-        className: classes.button,
-        variant: 'contained',
-    }
+  const classes = useStyles()
+  const defaultProps = {
+    className: classes.button,
+    variant: 'contained',
+  }
 
   const classes = useStyles()
   const defaultProps = {

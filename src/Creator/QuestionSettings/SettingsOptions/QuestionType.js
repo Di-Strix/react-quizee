@@ -13,32 +13,27 @@ const acceptableErrors = [
 ]
 
 const QuestionType = ({ updateQuestion, question, dictionary }) => {
-    const typeChangeHandler = ({ target }) => {
-        const questionCopy = JSON.parse(JSON.stringify(question))
+  const typeChangeHandler = ({ target }) => {
+    const questionCopy = JSON.parse(JSON.stringify(question))
 
-        questionCopy.type = TYPES[target.value] || TYPES.ONE_TRUE
+    questionCopy.type = TYPES[target.value] || TYPES.ONE_TRUE
 
-        if (target.value === TYPES.SEVERAL_TRUE) questionCopy.answer = []
-        else if (target.value === TYPES.WRITE_ANSWER) questionCopy.answer = ''
-        else questionCopy.answer = null
+    if (target.value === TYPES.SEVERAL_TRUE) questionCopy.answer = []
+    else if (target.value === TYPES.WRITE_ANSWER) questionCopy.answer = ''
+    else questionCopy.answer = null
 
-        updateQuestion(questionCopy)
-    }
+    updateQuestion(questionCopy)
+  }
 
-
-    return (
-        <SettingsCard
-            heading={dictionary.QUESTION_TYPE}
-            acceptableErrors={acceptableErrors}
-        >
-            <Select value={question.type} onChange={typeChangeHandler} style={{ width: '100%' }} variant='standard'>
-                <MenuItem value={TYPES.ONE_TRUE}>{dictionary.questionTypes[TYPES.ONE_TRUE].TYPE_NAME}</MenuItem>
-                <MenuItem value={TYPES.SEVERAL_TRUE}>{dictionary.questionTypes[TYPES.SEVERAL_TRUE].TYPE_NAME}</MenuItem>
-                <MenuItem value={TYPES.WRITE_ANSWER}>{dictionary.questionTypes[TYPES.WRITE_ANSWER].TYPE_NAME}</MenuItem>
-            </Select>
-        </SettingsCard>
-
-    )
+  return (
+    <SettingsCard heading={dictionary.QUESTION_TYPE} acceptableErrors={acceptableErrors}>
+      <Select value={question.type} onChange={typeChangeHandler} style={{ width: '100%' }} variant='standard'>
+        <MenuItem value={TYPES.ONE_TRUE}>{dictionary.questionTypes[TYPES.ONE_TRUE].TYPE_NAME}</MenuItem>
+        <MenuItem value={TYPES.SEVERAL_TRUE}>{dictionary.questionTypes[TYPES.SEVERAL_TRUE].TYPE_NAME}</MenuItem>
+        <MenuItem value={TYPES.WRITE_ANSWER}>{dictionary.questionTypes[TYPES.WRITE_ANSWER].TYPE_NAME}</MenuItem>
+      </Select>
+    </SettingsCard>
+  )
 }
 
 const mapStateToProps = state => ({

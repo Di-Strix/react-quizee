@@ -46,9 +46,9 @@ const mapDispatchToProps = {
 export default connect(mapStateToProps, mapDispatchToProps)(LangSelector)
 
 export const useGotoPath = () => {
-    const langCodeDefault = useSelector(mapStateToProps).state.lang
-    const navigate = useNavigate()
-    return (path = '', langCode) => {
-        navigate(`/${langCode || langCodeDefault}/${path.startsWith('/') ? path.slice(1) : path}`)
-    }
+  const langCodeDefault = useSelector(mapStateToProps).state.lang
+  const navigate = useNavigate()
+  return (path = '', langCode) => {
+    navigate(`/${langCode || langCodeDefault}/${path.startsWith('/') ? path.slice(1) : path}`)
+  }
 }

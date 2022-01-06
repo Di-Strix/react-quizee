@@ -9,25 +9,25 @@ import PreviewCard from './PreviewCard'
 import { updateQuizeeCaption } from 'redux/Creator/actions'
 
 const useStyles = makeStyles(theme => ({
-    grow: {
-        flexGrow: 1,
-    },
-    margin2: {
-        margin: theme.spacing(2),
-    },
-    cardsMargin: {
-        margin: `${theme.spacing(2)} 0`,
-    },
-    marginBottom2: {
-        marginBottom: theme.spacing(2),
-    },
-    noWrap: {
-        flexWrap: 'nowrap',
-    },
-    takeAllSpace: {
-        height: '100%',
-        width: '100%',
-    },
+  grow: {
+    flexGrow: 1,
+  },
+  margin2: {
+    margin: theme.spacing(2),
+  },
+  cardsMargin: {
+    margin: `${theme.spacing(2)} 0`,
+  },
+  marginBottom2: {
+    marginBottom: theme.spacing(2),
+  },
+  noWrap: {
+    flexWrap: 'nowrap',
+  },
+  takeAllSpace: {
+    height: '100%',
+    width: '100%',
+  },
   fit: {
     height: 'fit-content',
   },
