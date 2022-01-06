@@ -1,7 +1,7 @@
-import ScopedCssBaseline from '@material-ui/core/ScopedCssBaseline'
+import ScopedCssBaseline from '@mui/material/ScopedCssBaseline'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { compose, createStore, applyMiddleware } from 'redux'
 import './index.scss'
@@ -14,54 +14,58 @@ import Creator from './Creator/Creator'
 import thunk from 'redux-thunk'
 import FooterContextProvider from 'Viewer/Context/Footer/FooterContextProvider'
 import LangSelector from './LangSelector'
+import { ThemeProvider } from '@mui/styles'
+import { createTheme } from '@mui/material'
 
-const store = createStore(rootReducer, compose(
+const store = createStore(
+  rootReducer,
+  compose(
     applyMiddleware(thunk),
     process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION__
-        ? window.__REDUX_DEVTOOLS_EXTENSION__()
-        : compose,
-))
+      ? window.__REDUX_DEVTOOLS_EXTENSION__()
+      : compose
+  )
+)
+
+const theme = createTheme({})
 
 ReactDOM.render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <FooterContextProvider>
-                <ScopedCssBaseline>
-                    <SnackbarProvider
-                        maxSnack={3}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                    >
-                        <BrowserRouter>
-                            <Switch>
-                                <Route path='/:langCode'>
-                                    <LangSelector>
-                                        <Switch>
-                                            <Route path='/:langCode/Viewer'>
-                                                <Viewer />
-                                            </Route>
-                                            <Route path='/:langCode/Creator'>
-                                                <Creator />
-                                            </Route>
-                                            <Route path='/:langCode'>
-                                                <HomeScreen />
-                                            </Route>
-                                        </Switch>
-                                    </LangSelector>
-                                </Route>
-                                <Route path='/' exact>
-                                    <LangSelector />
-                                </Route>
-                            </Switch>
-                        </BrowserRouter>
-                    </SnackbarProvider>
-                </ScopedCssBaseline>
-            </FooterContextProvider>
-        </Provider>
-    </React.StrictMode>,
-    document.getElementById('root'),
+  <React.StrictMode>
+    <Provider store={store}>
+      <FooterContextProvider>
+        <ScopedCssBaseline>
+          <ThemeProvider theme={theme}>
+            <SnackbarProvider
+              maxSnack={3}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <BrowserRouter>
+                <Routes>
+                  <Route
+                    path='/:langCode/*'
+                    element={
+                      <LangSelector>
+                        <Routes>
+                          <Route path='Viewer' element={<Viewer />} />
+                          <Route path='Creator' element={<Creator />} />
+                          <Route path='' element={<HomeScreen />} />
+                        </Routes>
+                      </LangSelector>
+                    }
+                  />
+                  <Route path='/' exact element={<LangSelector />} />
+                </Routes>
+              </BrowserRouter>
+            </SnackbarProvider>
+          </ThemeProvider>
+        </ScopedCssBaseline>
+      </FooterContextProvider>
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
 )
 
 // If you want your app to work offline and load faster, you can change
