@@ -64,6 +64,7 @@ const QuestionsOverview = ({ state, onAdd = () => {}, onRemove = () => {}, updat
           fullWidth
           error={state.caption.length <= 0}
           label={dictionary.QUIZEE_CAPTION}
+          variant='standard'
         />
       </Grid>
       <Grid item className={[classes.grow, classes.cardsMargin].join(' ')}>

@@ -40,6 +40,7 @@ const AnswerInput = ({ updateQuestion, question, state, dictionary }) => {
         value={inputValue || ''}
         error={!Boolean(inputValue && inputValue.length >= 0)}
         onChange={e => answerChangeHandler(e.target.value)}
+        variant='standard'
       />
       <List style={{ paddingBottom: 0 }}>
         {configKeys.map(key => (

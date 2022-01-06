@@ -128,6 +128,7 @@ const AnswerOptions = ({ question, updateQuestion, dictionary, errorsDictionary 
                   error={answer.val.length <= 0}
                   multiline
                   onChange={e => answerOptionChangeHandler(answer.id, e.target.value)}
+                  variant='standard'
                 />
               }
             />

@@ -34,6 +34,7 @@ const QuestionCaption = ({ question, updateQuestion, dictionary }) => {
         value={caption}
         error={caption <= 0}
         onChange={e => captionChangeHandler(e.target.value)}
+        variant='standard'
       />
     </SettingsCard>
   )
