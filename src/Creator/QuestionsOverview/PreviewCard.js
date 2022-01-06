@@ -92,7 +92,7 @@ function PreviewCard({ index, style, setSelected = () => {}, onRemove = () => {}
             ' '
           )}
           direction='column'
-          justify='center'
+          justifyContent='center'
           alignItems='center'
           onClick={() => setSelected(index)}
         >

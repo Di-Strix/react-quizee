@@ -92,7 +92,7 @@ const QuestionsOverview = ({ state, onAdd = () => {}, onRemove = () => {}, updat
           )}
         </AutoSizer>
       </Grid>
-      <Grid container justify='center' className={classes.marginBottom2}>
+      <Grid container justifyContent='center' className={classes.marginBottom2}>
         <Grid item xs={12} lg={6}>
           <Paper variant='outlined'>
             <Button onClick={onAdd} className={classes.takeAllSpace}>

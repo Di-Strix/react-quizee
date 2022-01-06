@@ -98,7 +98,7 @@ const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerTe
       </HideOnScroll>
       <Box maxWidth='lg' style={{ flexGrow: 1 }}>
         <Container maxWidth='lg'>
-          <Grid container direction='row' justify='center'>
+          <Grid container direction='row' justifyContent='center'>
             {state.loading ? (
               <CircularProgress />
             ) : (

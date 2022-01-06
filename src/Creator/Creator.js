@@ -183,11 +183,11 @@ const Creator = ({
           </Toolbar>
         </AppBar>
         <Grid container direction='row' className={classes.Creator}>
-          <Grid container item xs={2} direction='column' justify='center' className={classes.noWrap}>
+          <Grid container item xs={2} direction='column' justifyContent='center' className={classes.noWrap}>
             <QuestionsOverview onAdd={questionCreateHandler} onRemove={questionRemoveHandler} />
           </Grid>
           <Divider orientation='vertical' flexItem light />
-          <Grid container item justify='center' alignContent='center' xs={7}>
+          <Grid container item justifyContent='center' alignContent='center' xs={7}>
             {state.questions.length > 0 ? (
               <Viewer ConstructorMode question={state.questions[state.selected]} />
             ) : (
@@ -203,7 +203,7 @@ const Creator = ({
             {state.selected >= 0 ? (
               <QuestionSettings />
             ) : (
-              <Grid container justify='center' alignContent='center' className={classes.takeAllSpace}>
+              <Grid container justifyContent='center' alignContent='center' className={classes.takeAllSpace}>
                 <Typography component='h2' variant='h6' color='textSecondary'>
                   {dictionary.sections.QuestionSettings.PLACEHOLDER}
                 </Typography>

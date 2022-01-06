@@ -68,9 +68,9 @@ const ButtonGrid = ({
     <div style={{ flexGrow: 1 }}>
       <AutoSizer>
         {({ height, width }) => (
-          <Grid container direction='row' justify='center' style={{ width, height, overflowY: 'auto' }}>
+          <Grid container direction='row' justifyContent='center' style={{ width, height, overflowY: 'auto' }}>
             <Container maxWidth='lg' style={{ width, height }}>
-              <Grid container alignItems='flex-end' alignContent='flex-end' justify='center' style={{ height: '100%' }}>
+              <Grid container alignItems='flex-end' alignContent='flex-end' justifyContent='center' style={{ height: '100%' }}>
                 {answerOptions.map((answerOption, index) => (
                   <Grid item key={answerOption.id} xs={12} sm={3} className={classes.buttonsHolder}>
                     <ButtonAnim
