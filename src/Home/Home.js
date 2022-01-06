@@ -96,7 +96,7 @@ const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerTe
           </Toolbar>
         </AppBar>
       </HideOnScroll>
-      <Box maxWidth='lg' style={{ flexGrow: 1 }}>
+      <Box maxWidth='lg' style={{ flexGrow: 1 }} alignSelf='center'>
         <Container maxWidth='lg'>
           <Grid container direction='row' justifyContent='center'>
             {state.loading ? (
