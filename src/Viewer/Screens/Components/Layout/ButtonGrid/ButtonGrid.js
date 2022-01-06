@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
-import { makeStyles, Button, Grid, Container, Zoom } from '@material-ui/core'
-import ToggleButton from '@material-ui/lab/ToggleButton'
+import { Button, Grid, Container, Zoom } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import ToggleButton from '@mui/lab/ToggleButton'
 import { screenChangeTransitionTime } from 'Viewer/constants'
 import IsConstructorMode from 'Viewer/Context/IsConstructorModeContext'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -14,7 +15,6 @@ const useStyles = makeStyles(theme => ({
         height: '100%',
         padding: theme.spacing(2),
         textTransform: 'none',
-        color: theme.palette.text.primary,
     },
     preTag: {
         fontFamily: theme.typography.fontFamily,
@@ -43,7 +43,6 @@ const ButtonGrid = ({
     const defaultProps = {
         className: classes.button,
         variant: 'contained',
-        color: 'default',
     }
 
     let ButtonNode = <></>

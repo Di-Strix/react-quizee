@@ -1,4 +1,5 @@
-import { Grid, withStyles } from '@material-ui/core'
+import { Grid } from '@mui/material'
+import { withStyles } from '@mui/styles'
 import React, { useContext, createContext } from 'react'
 import { connect } from 'react-redux'
 import { setFooterButtonState } from 'redux/Viewer/actions'

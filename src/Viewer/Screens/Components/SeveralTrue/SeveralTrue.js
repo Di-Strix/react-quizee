@@ -1,6 +1,7 @@
 import React, { useContext, createContext } from 'react'
 import AnswerHandlerContext from '../../../Context/AnswerHandlerContext'
-import { Grid, withStyles } from '@material-ui/core'
+import { Grid } from '@mui/material'
+import { withStyles } from '@mui/styles'
 import ButtonGrid from '../Layout/ButtonGrid/ButtonGrid'
 import Caption from '../Layout/Caption/Caption'
 import { connect } from 'react-redux'

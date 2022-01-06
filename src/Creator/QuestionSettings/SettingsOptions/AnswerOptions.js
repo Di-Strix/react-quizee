@@ -12,10 +12,10 @@ import {
     ListItemIcon,
     Radio,
     debounce
-} from '@material-ui/core'
-import AddIcon from '@material-ui/icons/Add'
+} from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 import { updateQuestion } from 'redux/Creator/actions'
-import DeleteIcon from '@material-ui/icons/Delete'
+import DeleteIcon from '@mui/icons-material/Delete'
 import SettingsCard from '../Components/SettingsCard'
 import * as ERR_TYPES from 'Creator/errorTypes'
 

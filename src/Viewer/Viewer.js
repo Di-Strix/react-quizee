@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import axios from 'axios'
 import { connect } from 'react-redux'
@@ -22,7 +22,8 @@ import {
     setFooterButtonState,
 } from '../redux/Viewer/actions'
 import Footer from './Screens/Components/Footer/Footer'
-import { Grid, makeStyles, Toolbar } from '@material-ui/core'
+import { Grid, Toolbar } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { screenChangeTransitionTime as transitionTime, captionShowTime } from 'Viewer/constants'
 import IsConstructorMode from './Context/IsConstructorModeContext'
 import { placeDataToLocString } from 'helperFunctions'

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Select, MenuItem } from '@material-ui/core'
+import { Select, MenuItem } from '@mui/material'
 import * as TYPES from 'redux/questionTypes'
 import { updateQuestion } from 'redux/Creator/actions'
 import SettingsCard from '../Components/SettingsCard'
@@ -32,7 +32,7 @@ const QuestionType = ({ updateQuestion, question, dictionary }) => {
             heading={dictionary.QUESTION_TYPE}
             acceptableErrors={acceptableErrors}
         >
-            <Select value={question.type} onChange={typeChangeHandler} style={{ width: '100%' }}>
+            <Select value={question.type} onChange={typeChangeHandler} style={{ width: '100%' }} variant='standard'>
                 <MenuItem value={TYPES.ONE_TRUE}>{dictionary.questionTypes[TYPES.ONE_TRUE].TYPE_NAME}</MenuItem>
                 <MenuItem value={TYPES.SEVERAL_TRUE}>{dictionary.questionTypes[TYPES.SEVERAL_TRUE].TYPE_NAME}</MenuItem>
                 <MenuItem value={TYPES.WRITE_ANSWER}>{dictionary.questionTypes[TYPES.WRITE_ANSWER].TYPE_NAME}</MenuItem>

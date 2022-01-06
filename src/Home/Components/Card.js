@@ -1,14 +1,14 @@
 import React from 'react'
 import {
     Grid,
-    makeStyles,
     Card,
     CardContent,
     CardActions,
     Button,
     Typography,
     CardMedia,
-} from '@material-ui/core'
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { connect } from 'react-redux'
 import Image from 'material-ui-image'
 
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
         overflow: 'hidden'
     },
     cardMargin: {
-        margin: `0 ${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
+        margin: `0 ${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(2)}`,
     },
     media: {
         height: 0,

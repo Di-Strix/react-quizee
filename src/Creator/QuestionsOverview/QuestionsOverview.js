@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react'
-import { makeStyles, Button, Grid, Paper, TextField, debounce } from '@material-ui/core'
+import { Button, Grid, Paper, TextField, debounce } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
-import AddIcon from '@material-ui/icons/Add'
+import AddIcon from '@mui/icons-material/Add'
 import { connect } from 'react-redux'
 import PreviewCard from './PreviewCard'
 import { updateQuizeeCaption } from 'redux/Creator/actions'
@@ -15,7 +16,7 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(2),
     },
     cardsMargin: {
-        margin: `${theme.spacing(2)}px 0`,
+        margin: `${theme.spacing(2)} 0`,
     },
     marginBottom2: {
         marginBottom: theme.spacing(2),

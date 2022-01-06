@@ -2,7 +2,6 @@ import React, { useEffect, useCallback } from 'react'
 import {
     Box,
     Grid,
-    makeStyles,
     Typography,
     CircularProgress,
     AppBar,
@@ -11,8 +10,9 @@ import {
     Fab,
     useScrollTrigger,
     Slide,
-} from '@material-ui/core'
-import EditIcon from '@material-ui/icons/Edit'
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import EditIcon from '@mui/icons-material/Edit'
 import { connect } from 'react-redux'
 import { fetchQuizees, showQuizees } from 'redux/Home/actions'
 import { setQuizeeID, setText } from 'redux/Viewer/actions'

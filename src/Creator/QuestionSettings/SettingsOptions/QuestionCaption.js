@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { TextField, debounce } from '@material-ui/core'
+import { TextField, debounce } from '@mui/material'
 import { updateQuestion } from 'redux/Creator/actions'
 import SettingsCard from '../Components/SettingsCard'
 import * as ERR_TYPE from 'Creator/errorTypes'

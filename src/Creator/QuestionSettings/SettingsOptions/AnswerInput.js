@@ -7,7 +7,7 @@ import {
     ListItemIcon,
     Checkbox,
     debounce
-} from '@material-ui/core'
+} from '@mui/material'
 import { connect } from 'react-redux'
 import { updateQuestion } from 'redux/Creator/actions'
 import SettingsCard from '../Components/SettingsCard'

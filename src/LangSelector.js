@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { connect, useSelector } from 'react-redux'
 import * as LANG_TYPES from 'Localization/LangTypes'
 import { setLanguage } from 'redux/Global/actions'
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress } from '@mui/material'
 
 const LangSelector = ({ state, children, setLanguage }) => {
     const { langCode } = useParams()
@@ -52,8 +52,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(LangSelector)
 
 export const useGotoPath = () => {
     const langCodeDefault = useSelector(mapStateToProps).state.lang
-    const history = useHistory()
+    const navigate = useNavigate()
     return (path = '', langCode) => {
-        history.push(`/${langCode || langCodeDefault}/${path.startsWith('/') ? path.slice(1) : path}`)
+        navigate(`/${langCode || langCodeDefault}/${path.startsWith('/') ? path.slice(1) : path}`)
     }
 }

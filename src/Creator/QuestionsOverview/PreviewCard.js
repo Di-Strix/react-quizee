@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { createMuiTheme, Grid, Paper, IconButton, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { useTheme, Grid, Paper, IconButton, Typography } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { setSelected } from 'redux/Creator/actions'
 import { connect } from 'react-redux'
 import * as TYPES from 'redux/questionTypes'
-import DeleteIcon from '@material-ui/icons/Delete'
-import TextFieldsIcon from '@material-ui/icons/TextFields'
-import SeveralTrueIcon from '@material-ui/icons/DoneAll'
-import OneTrueIcon from '@material-ui/icons/Done'
+import DeleteIcon from '@mui/icons-material/Delete'
+import TextFieldsIcon from '@mui/icons-material/TextFields'
+import SeveralTrueIcon from '@mui/icons-material/DoneAll'
+import OneTrueIcon from '@mui/icons-material/Done'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 
 function PreviewCard({ index, style, setSelected = () => { }, onRemove = () => { }, state, questions }) {
     const classes = useStyles()
-    const theme = createMuiTheme()
+    const theme = useTheme()
     const [buttonHover, setButtonHover] = useState(false)
     const [cardHover, setCardHover] = useState(false)
 
@@ -65,7 +65,7 @@ function PreviewCard({ index, style, setSelected = () => { }, onRemove = () => {
             <Paper
                 style={{
                     height: style.height,
-                    width: `calc(${style.width} - ${theme.spacing(2)}px)`,
+                    width: `calc(${style.width} - ${theme.spacing(2)})`,
                     margin: '0 auto',
                     zIndex: 0,
                     overflow: 'hidden',
