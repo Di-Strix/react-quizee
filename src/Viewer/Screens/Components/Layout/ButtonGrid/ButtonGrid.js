@@ -44,13 +44,6 @@ const ButtonGrid = ({
     variant: 'contained',
   }
 
-  const classes = useStyles()
-  const defaultProps = {
-    className: classes.button,
-    variant: 'contained',
-    color: 'default',
-  }
-
   let ButtonNode = <></>
   let additionalProps = () => ({})
 
