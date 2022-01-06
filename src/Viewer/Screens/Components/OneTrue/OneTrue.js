@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import AnswerHandlerContext from '../../../Context/AnswerHandlerContext'
-import { makeStyles, Grid } from '@material-ui/core'
+import { Grid } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import Caption from '../Layout/Caption/Caption'
 import ButtonGrid from '../Layout/ButtonGrid/ButtonGrid'
 import { setFooterButtonState } from 'redux/Viewer/actions'

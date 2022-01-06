@@ -2,20 +2,20 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as TYPES from 'redux/questionTypes'
 import {
-  IconButton,
-  List,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-  TextField,
-  Checkbox,
-  ListItemIcon,
-  Radio,
-  debounce,
-} from '@material-ui/core'
-import AddIcon from '@material-ui/icons/Add'
+    IconButton,
+    List,
+    ListItem,
+    ListItemSecondaryAction,
+    ListItemText,
+    TextField,
+    Checkbox,
+    ListItemIcon,
+    Radio,
+    debounce
+} from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 import { updateQuestion } from 'redux/Creator/actions'
-import DeleteIcon from '@material-ui/icons/Delete'
+import DeleteIcon from '@mui/icons-material/Delete'
 import SettingsCard from '../Components/SettingsCard'
 import * as ERR_TYPES from 'Creator/errorTypes'
 

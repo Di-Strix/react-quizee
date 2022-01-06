@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Grid } from '@material-ui/core'
+import { Grid } from '@mui/material'
 import * as TYPES from 'redux/questionTypes'
 import { QUESTION_CAPTION, QUESTION_TYPE, ANSWER_OPTIONS, ANSWER_INPUT } from '../types'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import SettingsOptions from './SettingsOptions'
 
 const CONFIG = {

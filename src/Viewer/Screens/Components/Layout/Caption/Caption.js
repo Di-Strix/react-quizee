@@ -1,5 +1,6 @@
 import React from 'react'
-import { makeStyles, Grid, Box, Typography, Container } from '@material-ui/core'
+import { Grid, Box, Typography, Container } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 
 const useStyles = makeStyles(theme => ({
   header: {

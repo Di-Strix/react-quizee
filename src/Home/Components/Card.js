@@ -1,34 +1,43 @@
 import React from 'react'
-import { Grid, makeStyles, Card, CardContent, CardActions, Button, Typography, CardMedia } from '@material-ui/core'
+import {
+    Grid,
+    Card,
+    CardContent,
+    CardActions,
+    Button,
+    Typography,
+    CardMedia,
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { connect } from 'react-redux'
 import Image from 'material-ui-image'
 
 const useStyles = makeStyles(theme => ({
-  content: {
-    marginTop: theme.spacing(2),
-  },
-  card: {
-    width: 275,
-    maxHeight: 374,
-    overflow: 'hidden',
-  },
-  cardMargin: {
-    margin: `0 ${theme.spacing(2)}px ${theme.spacing(2)}px ${theme.spacing(2)}px`,
-  },
-  media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9
-  },
-  gutterBottom: {
-    marginBottom: theme.spacing(2),
-  },
-  cardHeader: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: '-webkit-box',
-    '-webkit-line-clamp': 1,
-    '-webkit-box-orient': 'vertical',
-  },
+    content: {
+        marginTop: theme.spacing(2),
+    },
+    card: {
+        width: 275,
+        maxHeight: 374,
+        overflow: 'hidden'
+    },
+    cardMargin: {
+        margin: `0 ${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(2)}`,
+    },
+    media: {
+        height: 0,
+        paddingTop: '56.25%', // 16:9
+    },
+    gutterBottom: {
+        marginBottom: theme.spacing(2),
+    },
+    cardHeader: {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        display: '-webkit-box',
+        '-webkit-line-clamp': 1,
+        '-webkit-box-orient': 'vertical',
+    },
 }))
 
 const CustomImageComponent = imgLink => {

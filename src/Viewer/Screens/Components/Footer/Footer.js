@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
-import { AppBar, Toolbar, Button, makeStyles, Container, Grid } from '@material-ui/core'
-import ArrowIcon from '@material-ui/icons/ArrowForwardIos'
+import { AppBar, Toolbar, Button, Container, Grid } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import ArrowIcon from '@mui/icons-material/ArrowForwardIos'
 import { connect } from 'react-redux'
 import FooterContext from 'Viewer/Context/Footer/FooterContext'
 
