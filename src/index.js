@@ -15,53 +15,56 @@ import thunk from 'redux-thunk'
 import FooterContextProvider from 'Viewer/Context/Footer/FooterContextProvider'
 import LangSelector from './LangSelector'
 
-const store = createStore(rootReducer, compose(
+const store = createStore(
+  rootReducer,
+  compose(
     applyMiddleware(thunk),
     process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION__
-        ? window.__REDUX_DEVTOOLS_EXTENSION__()
-        : compose,
-))
+      ? window.__REDUX_DEVTOOLS_EXTENSION__()
+      : compose
+  )
+)
 
 ReactDOM.render(
-    <React.StrictMode>
-        <Provider store={store}>
-            <FooterContextProvider>
-                <ScopedCssBaseline>
-                    <SnackbarProvider
-                        maxSnack={3}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                    >
-                        <BrowserRouter>
-                            <Switch>
-                                <Route path='/:langCode'>
-                                    <LangSelector>
-                                        <Switch>
-                                            <Route path='/:langCode/Viewer'>
-                                                <Viewer />
-                                            </Route>
-                                            <Route path='/:langCode/Creator'>
-                                                <Creator />
-                                            </Route>
-                                            <Route path='/:langCode'>
-                                                <HomeScreen />
-                                            </Route>
-                                        </Switch>
-                                    </LangSelector>
-                                </Route>
-                                <Route path='/' exact>
-                                    <LangSelector />
-                                </Route>
-                            </Switch>
-                        </BrowserRouter>
-                    </SnackbarProvider>
-                </ScopedCssBaseline>
-            </FooterContextProvider>
-        </Provider>
-    </React.StrictMode>,
-    document.getElementById('root'),
+  <React.StrictMode>
+    <Provider store={store}>
+      <FooterContextProvider>
+        <ScopedCssBaseline>
+          <SnackbarProvider
+            maxSnack={3}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            <BrowserRouter>
+              <Switch>
+                <Route path='/:langCode'>
+                  <LangSelector>
+                    <Switch>
+                      <Route path='/:langCode/Viewer'>
+                        <Viewer />
+                      </Route>
+                      <Route path='/:langCode/Creator'>
+                        <Creator />
+                      </Route>
+                      <Route path='/:langCode'>
+                        <HomeScreen />
+                      </Route>
+                    </Switch>
+                  </LangSelector>
+                </Route>
+                <Route path='/' exact>
+                  <LangSelector />
+                </Route>
+              </Switch>
+            </BrowserRouter>
+          </SnackbarProvider>
+        </ScopedCssBaseline>
+      </FooterContextProvider>
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
 )
 
 // If you want your app to work offline and load faster, you can change

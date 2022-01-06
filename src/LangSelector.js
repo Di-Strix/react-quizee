@@ -6,54 +6,49 @@ import { setLanguage } from 'redux/Global/actions'
 import { CircularProgress } from '@material-ui/core'
 
 const LangSelector = ({ state, children, setLanguage }) => {
-    const { langCode } = useParams()
-    const gotoPath = useGotoPath()
+  const { langCode } = useParams()
+  const gotoPath = useGotoPath()
 
-    useEffect(() => {
-        if(state.lang === langCode) return
+  useEffect(() => {
+    if (state.lang === langCode) return
 
-        const processPreferedLanguagesList = () => {
-            let newLangCode
+    const processPreferedLanguagesList = () => {
+      let newLangCode
 
-            navigator.languages.every(code =>
-                LANG_TYPES[code] ? !Boolean(newLangCode = code) : true
-            )
+      navigator.languages.every(code => (LANG_TYPES[code] ? !Boolean((newLangCode = code)) : true))
 
-            return newLangCode
-        }
-
-        const newLangCode =
-            LANG_TYPES[langCode]
-                ? langCode
-                : processPreferedLanguagesList() || 'en'
-
-        console.log(navigator.languages)
-        setLanguage(newLangCode)
-        gotoPath(undefined, newLangCode)
-        //eslint-disable-next-line
-    }, [langCode])
-
-    if (state.lang !== langCode) {
-        return <CircularProgress />
+      return newLangCode
     }
 
-    return children
+    const newLangCode = LANG_TYPES[langCode] ? langCode : processPreferedLanguagesList() || 'en'
+
+    console.log(navigator.languages)
+    setLanguage(newLangCode)
+    gotoPath(undefined, newLangCode)
+    //eslint-disable-next-line
+  }, [langCode])
+
+  if (state.lang !== langCode) {
+    return <CircularProgress />
+  }
+
+  return children
 }
 
 const mapStateToProps = state => ({
-    state: state.Global
+  state: state.Global,
 })
 
 const mapDispatchToProps = {
-    setLanguage
+  setLanguage,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LangSelector)
 
 export const useGotoPath = () => {
-    const langCodeDefault = useSelector(mapStateToProps).state.lang
-    const history = useHistory()
-    return (path = '', langCode) => {
-        history.push(`/${langCode || langCodeDefault}/${path.startsWith('/') ? path.slice(1) : path}`)
-    }
+  const langCodeDefault = useSelector(mapStateToProps).state.lang
+  const history = useHistory()
+  return (path = '', langCode) => {
+    history.push(`/${langCode || langCodeDefault}/${path.startsWith('/') ? path.slice(1) : path}`)
+  }
 }
