@@ -12,7 +12,7 @@ const LangSelector = ({ state, children, setLanguage }) => {
   useEffect(() => {
     if (state.lang === langCode) return
 
-    const processPreferedLanguagesList = () => {
+    const processPreferredLanguagesList = () => {
       let newLangCode
 
       navigator.languages.every(code => (LANG_TYPES[code] ? !Boolean((newLangCode = code)) : true))
@@ -20,7 +20,7 @@ const LangSelector = ({ state, children, setLanguage }) => {
       return newLangCode
     }
 
-    const newLangCode = LANG_TYPES[langCode] ? langCode : processPreferedLanguagesList() || 'en'
+    const newLangCode = LANG_TYPES[langCode] ? langCode : processPreferredLanguagesList() || 'en'
 
     console.log(navigator.languages)
     setLanguage(newLangCode)
