@@ -26,7 +26,7 @@ initializeAppCheck(app, {
 })
 
 const cloudFunctions = getFunctions(app)
-if (process.env.NODE_ENV === 'development')
+if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_FUNCTIONS_USE_EMULATOR.toUpperCase() === 'TRUE')
   connectFunctionsEmulator(
     cloudFunctions,
     process.env.REACT_APP_FUNCTIONS_EMULATOR_HOST,
