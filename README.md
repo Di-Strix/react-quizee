@@ -19,5 +19,8 @@
       REACT_APP_FUNCTIONS_EMULATOR_PORT=
       ```
       You can get your app's firebase config from you project's settings.
-      
+
       How to setup appCheck: https://firebase.google.com/docs/app-check
+  4. Clone [quizee cloud functions](https://github.com/Di-Strix/quizee-cloud-functions) repo
+  5. Run quizee cloud functions (read README in the corresponding repo)
+  6. Run React quizee
