@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
-import axios from 'axios'
 import { connect } from 'react-redux'
 import './Viewer.scss'
 import MainScreen from './Screens/MainScreen'
@@ -28,6 +27,7 @@ import { screenChangeTransitionTime as transitionTime, captionShowTime } from 'V
 import IsConstructorMode from './Context/IsConstructorModeContext'
 import { placeDataToLocString } from 'helperFunctions'
 import { useGotoPath } from 'LangSelector'
+import { firebaseContext } from 'Context/Firebase/Firebase'
 
 const useStyles = makeStyles(theme => ({
   constructorViewer: {
@@ -49,6 +49,7 @@ const useStyles = makeStyles(theme => ({
 const Viewer = props => {
   const classes = useStyles()
   const gotoPath = useGotoPath()
+  const { fetchQuizeeQuestions, checkAnswers } = useContext(firebaseContext)
 
   const fetchQuizee = useMemo(() => {
     if (props.ConstructorMode) {
@@ -66,11 +67,9 @@ const Viewer = props => {
         props.setLoading(true)
       }, 1000)
 
-      axios
-        .get(process.env.REACT_APP_QUIZEE_DB_URL + `quizees/${props.state.quizeeId}/content.json`)
+      fetchQuizeeQuestions(props.state.quizeeId)
         .then(res => {
-          console.log(res)
-          props.saveQuestions(res.data.questions)
+          props.saveQuestions(res.questions)
           const elapsed = new Date().getTime() - startTime
           setTimeout(
             () => {
@@ -102,7 +101,7 @@ const Viewer = props => {
 
   useEffect(fetchQuizee, [fetchQuizee])
 
-  const checkAnswers = useMemo(() => {
+  const performAnswersCheck = useMemo(() => {
     if (props.ConstructorMode) {
       return () => {}
     }
@@ -113,17 +112,12 @@ const Viewer = props => {
       props.setLoading(true)
       props.setFooterButtonState(false)
 
-      axios
-        .get(
-          process.env.REACT_APP_QUIZEE_API_URL +
-            'checkAnswers?data=' +
-            JSON.stringify({ quizeeId: props.state.quizeeId, answers: [...props.state.answers, lastAnswer] }, null, 0)
-        )
+      checkAnswers({ quizeeId: props.state.quizeeId, answers: [...props.state.answers, lastAnswer] })
         .then(res => {
           setTimeout(() => {
             props.updateTransitionKey()
             props.setLoading(false)
-            props.setText(placeDataToLocString(props.dictionary.RESULTS_TEXT, res.data.message))
+            props.setText(placeDataToLocString(props.dictionary.RESULTS_TEXT, res))
           }, transitionTime)
         })
         .catch(err => {
@@ -151,11 +145,11 @@ const Viewer = props => {
       props.addAnswer(answer)
       props.updateTransitionKey()
       if (props.state.answers.length + 1 === props.state.questions.length) {
-        checkAnswers(answer)
+        performAnswersCheck(answer)
       }
     }
     // eslint-disable-next-line
-  }, [props.addAnswer, props.updateTransitionKey, props.state.answers, props.state.questions, checkAnswers])
+  }, [props.addAnswer, props.updateTransitionKey, props.state.answers, props.state.questions, performAnswersCheck])
 
   let screen = <></>
 

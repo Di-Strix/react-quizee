@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useContext } from 'react'
 import {
   Box,
   Grid,
@@ -16,10 +16,10 @@ import EditIcon from '@mui/icons-material/Edit'
 import { connect } from 'react-redux'
 import { fetchQuizees, showQuizees } from 'redux/Home/actions'
 import { setQuizeeID, setText } from 'redux/Viewer/actions'
-import axios from 'axios'
 import { useSnackbar } from 'notistack'
 import { useGotoPath } from 'LangSelector'
 import Card from './Components/Card'
+import { firebaseContext } from 'Context/Firebase/Firebase'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,23 +42,14 @@ const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerTe
   const classes = useStyles()
   const gotoPath = useGotoPath()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { getQuizeesList } = useContext(firebaseContext)
 
   const startFetchingQuizees = useCallback(() => {
     fetchQuizees()
 
-    axios
-      .get(process.env.REACT_APP_QUIZEE_API_URL + 'getQuizeesList', { timeout: 5000 })
-      .then(res => res.data)
-      .then(data => {
-        if (data.ok) {
-          return data.message
-        } else {
-          throw new Error('something went wrong while fetching')
-        }
-      })
+    getQuizeesList()
       .then(list => {
         showQuizees(list)
-        console.log(list)
       })
       .catch(err => {
         const snackbarKey = enqueueSnackbar(dictionary.errors.FETCH_ERROR, {
@@ -70,7 +61,7 @@ const HomeScreen = ({ state, fetchQuizees, showQuizees, setQuizeeID, setViewerTe
           startFetchingQuizees()
         }, 3000)
       })
-  }, [fetchQuizees, showQuizees, enqueueSnackbar, closeSnackbar, dictionary])
+  }, [fetchQuizees, showQuizees, enqueueSnackbar, closeSnackbar, dictionary, getQuizeesList])
 
   useEffect(() => {
     startFetchingQuizees()

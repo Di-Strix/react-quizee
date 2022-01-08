@@ -16,6 +16,7 @@ import FooterContextProvider from 'Viewer/Context/Footer/FooterContextProvider'
 import LangSelector from './LangSelector'
 import { ThemeProvider } from '@mui/styles'
 import { createTheme } from '@mui/material'
+import { FirebaseContextProvider } from 'Context/Firebase/Firebase'
 
 const store = createStore(
   rootReducer,
@@ -32,37 +33,39 @@ const theme = createTheme({})
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <FooterContextProvider>
-        <ScopedCssBaseline>
-          <ThemeProvider theme={theme}>
-            <SnackbarProvider
-              maxSnack={3}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-            >
-              <BrowserRouter>
-                <Routes>
-                  <Route
-                    path='/:langCode/*'
-                    element={
-                      <LangSelector>
-                        <Routes>
-                          <Route path='Viewer' element={<Viewer />} />
-                          <Route path='Creator' element={<Creator />} />
-                          <Route path='' element={<HomeScreen />} />
-                        </Routes>
-                      </LangSelector>
-                    }
-                  />
-                  <Route path='/' exact element={<LangSelector />} />
-                </Routes>
-              </BrowserRouter>
-            </SnackbarProvider>
-          </ThemeProvider>
-        </ScopedCssBaseline>
-      </FooterContextProvider>
+      <FirebaseContextProvider>
+        <FooterContextProvider>
+          <ScopedCssBaseline>
+            <ThemeProvider theme={theme}>
+              <SnackbarProvider
+                maxSnack={3}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <BrowserRouter>
+                  <Routes>
+                    <Route
+                      path='/:langCode/*'
+                      element={
+                        <LangSelector>
+                          <Routes>
+                            <Route path='Viewer' element={<Viewer />} />
+                            <Route path='Creator' element={<Creator />} />
+                            <Route path='' element={<HomeScreen />} />
+                          </Routes>
+                        </LangSelector>
+                      }
+                    />
+                    <Route path='/' exact element={<LangSelector />} />
+                  </Routes>
+                </BrowserRouter>
+              </SnackbarProvider>
+            </ThemeProvider>
+          </ScopedCssBaseline>
+        </FooterContextProvider>
+      </FirebaseContextProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
