@@ -41,8 +41,8 @@ function PreviewCard({ index, style, setSelected = () => {}, onRemove = () => {}
   const [buttonHover, setButtonHover] = useState(false)
   const [cardHover, setCardHover] = useState(false)
 
-  const rootStyles = { ...style, height: style.height + theme.spacing(1) } // increasing div's height to make gutter bottom
-  rootStyles.top = style.top + theme.spacing(index + 1) // calculating position height of card with spacing
+  const rootStyles = { ...style, height: style.height + +theme.spacing(1).slice(0, -2) } // increasing div's height to make gutter bottom
+  rootStyles.top = style.top + +theme.spacing(index + 1).slice(0, -2) // calculating position height of card with spacing
 
   let PreviewIcon = <></>
 
